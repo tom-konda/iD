@@ -14,8 +14,8 @@ iD.Map = function(context) {
         minzoom = 0,
         points = iD.svg.Points(roundedProjection, context),
         vertices = iD.svg.Vertices(roundedProjection, context),
-        lines = iD.svg.Lines(projection),
-        areas = iD.svg.Areas(projection),
+        lines = iD.svg.Lines(projection, context),
+        areas = iD.svg.Areas(projection, context),
         midpoints = iD.svg.Midpoints(roundedProjection, context),
         labels = iD.svg.Labels(projection, context),
         supersurface, surface,
@@ -137,18 +137,6 @@ iD.Map = function(context) {
         dispatch.drawn({full: true});
     }
 
-    function editOff() {
-        var mode = context.mode();
-
-        context.features().resetStats();
-        surface.selectAll('.layer *').remove();
-        if (!(mode && mode.id === 'browse')) {
-            context.enter(iD.modes.Browse(context));
-        }
-
-        dispatch.drawn({full: true});
-    }
-
     function zoomPan() {
         if (d3.event && d3.event.sourceEvent.type === 'dblclick') {
             if (!dblclickEnabled) {
@@ -212,10 +200,9 @@ iD.Map = function(context) {
 
         if (map.editable()) {
             context.connection().loadTiles(projection, dimensions);
-            drawVector(difference, extent);
-        } else {
-            editOff();
         }
+
+        drawVector(difference, extent);
 
         transformStart = [
             projection.scale() * 2 * Math.PI,
@@ -342,7 +329,7 @@ iD.Map = function(context) {
     map.zoomTo = function(entity, zoomLimits) {
         var extent = entity.extent(context.graph()),
             zoom = map.extentZoom(extent);
-        zoomLimits = zoomLimits || [context.minEditableZoom(), 20];
+        zoomLimits = zoomLimits || [0, 20];
         map.centerZoom(extent.center(), Math.min(Math.max(zoom, zoomLimits[0]), zoomLimits[1]));
     };
 
@@ -408,6 +395,9 @@ iD.Map = function(context) {
     map.editable = function() {
         return map.zoom() >= context.minEditableZoom();
     };
+
+    /* This is the dynamic minimum zoom level for the map.
+    It is used during draw operations so the user zoom out past the minimum editable zoom. */
 
     map.minzoom = function(_) {
         if (!arguments.length) return minzoom;

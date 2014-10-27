@@ -36,6 +36,7 @@ dist/iD.js: \
 	js/lib/sexagesimal.js \
 	js/lib/togeojson.js \
 	js/lib/marked.js \
+	js/lib/simplify.js \
 	js/id/start.js \
 	js/id/id.js \
 	js/id/services/*.js \

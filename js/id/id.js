@@ -170,6 +170,13 @@ window.iD = function () {
         }
     };
 
+    var focusedID;
+    context.focusedID = function(_) {
+        if (!arguments.length) return focusedID;
+        focusedID = _;
+        return context;
+    };
+
     context.loadEntity = function(id, zoomTo) {
         if (zoomTo !== false) {
             connection.loadEntity(id, function(error, entity) {

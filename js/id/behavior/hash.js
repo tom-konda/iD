@@ -65,7 +65,13 @@ iD.behavior.Hash = function(context) {
 
         if (location.hash) {
             var q = iD.util.stringQs(location.hash.substring(1));
-            if (q.id) context.loadEntity(q.id.split(',')[0], !q.map);
+            if (q.id) {
+                var entityIDs = q.id.split(',');
+                if (entityIDs.length === 1) {
+                    context.loadEntity(entityIDs[0], !q.map);
+                    context.focusedID(entityIDs[0]);
+                }
+            }
             if (q.comment) context.storage('comment', q.comment);
             hashchange();
             if (q.map) hash.hadHash = true;

@@ -1,6 +1,5 @@
 iD.ui.MapData = function(context) {
     var key = 'F',
-        features = context.features().keys(),
         fills = ['wireframe', 'partial', 'full'],
         fillDefault = context.storage('area-fill') || 'partial',
         fillSelected = fillDefault;
@@ -97,7 +96,7 @@ iD.ui.MapData = function(context) {
         }
 
         function update() {
-            featureList.call(drawList, features, 'checkbox', 'feature', clickFeature, showsFeature);
+            featureList.call(drawList, context.features().keys(), 'checkbox', 'feature', clickFeature, showsFeature);
             fillList.call(drawList, fills, 'radio', 'area_fill', setFill, showsFill);
 
             var hasGpx = context.background().hasGpxLayer(),
