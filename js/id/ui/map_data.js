@@ -115,13 +115,6 @@ iD.ui.MapData = function(context) {
                 .property('checked', showsMapillary);
         }
 
-        var content = selection.append('div')
-                .attr('class', 'fillL map-overlay col3 content hide'),
-            tooltip = bootstrap.tooltip()
-                .placement('left')
-                .html(true)
-                .title(iD.ui.tooltipHtml(t('map_data.description'), key));
-
         function hidePanel() { setVisible(false); }
 
         function togglePanel() {
@@ -166,7 +159,14 @@ iD.ui.MapData = function(context) {
             }
         }
 
-        var button = selection.append('button')
+
+        var content = selection.append('div')
+                .attr('class', 'fillL map-overlay col3 content hide'),
+            tooltip = bootstrap.tooltip()
+                .placement('left')
+                .html(true)
+                .title(iD.ui.tooltipHtml(t('map_data.description'), key)),
+            button = selection.append('button')
                 .attr('tabindex', -1)
                 .on('click', togglePanel)
                 .call(tooltip),

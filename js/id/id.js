@@ -201,9 +201,6 @@ window.iD = function () {
         });
     };
 
-    context.editable = function() {
-        return map.editable();
-    };
 
     /* Behaviors */
     context.install = function(behavior) {
@@ -212,6 +209,14 @@ window.iD = function () {
 
     context.uninstall = function(behavior) {
         context.surface().call(behavior.off);
+    };
+
+    /* Copy/Paste */
+    var copiedIDs = [];
+    context.copiedIDs = function(_) {
+        if (!arguments.length) return copiedIDs;
+        copiedIDs = _;
+        return context;
     };
 
     /* Projection */
@@ -235,6 +240,7 @@ window.iD = function () {
     context.map = function() { return map; };
     context.layers = function() { return map.layers; };
     context.surface = function() { return map.surface; };
+    context.editable = function() { return map.editable(); };
     context.mouse = map.mouse;
     context.extent = map.extent;
     context.pan = map.pan;
@@ -307,7 +313,7 @@ window.iD = function () {
     return d3.rebind(context, dispatch, 'on');
 };
 
-iD.version = '1.6.1';
+iD.version = '1.7.0';
 
 (function() {
     var detected = {};

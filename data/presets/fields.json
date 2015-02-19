@@ -202,6 +202,11 @@
         "type": "typeCombo",
         "label": "Type"
     },
+    "bench": {
+        "key": "bench",
+        "type": "check",
+        "label": "Bench"
+    },
     "bicycle_parking": {
         "key": "bicycle_parking",
         "type": "combo",
@@ -211,6 +216,11 @@
         "key": "boundary",
         "type": "combo",
         "label": "Type"
+    },
+    "brand": {
+        "key": "brand",
+        "type": "text",
+        "label": "Brand"
     },
     "building": {
         "key": "building",
@@ -305,6 +315,11 @@
         "key": "cuisine",
         "type": "combo",
         "label": "Cuisine"
+    },
+    "delivery": {
+        "key": "delivery",
+        "type": "check",
+        "label": "Delivery"
     },
     "denomination": {
         "key": "denomination",
@@ -441,6 +456,23 @@
         "type": "combo",
         "label": "Gauge"
     },
+    "gender": {
+        "type": "radio",
+        "keys": [
+            "male",
+            "female",
+            "unisex"
+        ],
+        "label": "Gender",
+        "placeholder": "Unknown",
+        "strings": {
+            "options": {
+                "male": "Male",
+                "female": "Female",
+                "unisex": "Unisex"
+            }
+        }
+    },
     "generator/method": {
         "key": "generator:method",
         "type": "combo",
@@ -538,6 +570,33 @@
         "key": "layer",
         "type": "combo",
         "label": "Layer"
+    },
+    "leaf_cycle": {
+        "key": "leaf_cycle",
+        "type": "combo",
+        "label": "Leaf Cycle",
+        "strings": {
+            "options": {
+                "evergreen": "Evergreen",
+                "deciduous": "Deciduous",
+                "semi_evergreen": "Semi-Evergreen",
+                "semi_deciduous": "Semi-Deciduous",
+                "mixed": "Mixed"
+            }
+        }
+    },
+    "leaf_type": {
+        "key": "leaf_type",
+        "type": "combo",
+        "label": "Leaf Type",
+        "strings": {
+            "options": {
+                "broadleaved": "Broadleaved",
+                "needleleaved": "Needleleaved",
+                "mixed": "Mixed",
+                "leafless": "Leafless"
+            }
+        }
     },
     "leisure": {
         "key": "leisure",
@@ -883,6 +942,30 @@
             "drive-through"
         ]
     },
+    "service/bicycle/chain_tool": {
+        "key": "service:bicycle:chain_tool",
+        "type": "check",
+        "label": "Chain Tool",
+        "strings": {
+            "options": {
+                "undefined": "Assumed to be No",
+                "yes": "Yes",
+                "no": "No"
+            }
+        }
+    },
+    "service/bicycle/pump": {
+        "key": "service:bicycle:pump",
+        "type": "check",
+        "label": "Air Pump",
+        "strings": {
+            "options": {
+                "undefined": "Assumed to be No",
+                "yes": "Yes",
+                "no": "No"
+            }
+        }
+    },
     "shelter": {
         "key": "shelter",
         "type": "check",
@@ -933,7 +1016,7 @@
                 "very_bad": "High Clearance: light duty off-road vehicle",
                 "horrible": "Off-Road: heavy duty off-road vehicle",
                 "very_horrible": "Specialized off-road: tractor, ATV",
-                "impassible": "Impassible / No wheeled vehicle"
+                "impassable": "Impassable / No wheeled vehicle"
             }
         }
     },
@@ -1027,6 +1110,11 @@
             "video"
         ]
     },
+    "substation": {
+        "key": "substation",
+        "type": "typeCombo",
+        "label": "Type"
+    },
     "supervised": {
         "key": "supervised",
         "type": "check",
@@ -1041,6 +1129,19 @@
         "key": "tactile_paving",
         "type": "check",
         "label": "Tactile Paving"
+    },
+    "takeaway": {
+        "key": "takeaway",
+        "type": "combo",
+        "label": "Takeaway",
+        "placeholder": "Yes, No, Takeaway Only...",
+        "strings": {
+            "options": {
+                "yes": "Yes",
+                "no": "No",
+                "only": "Takeaway Only"
+            }
+        }
     },
     "toilets/disposal": {
         "key": "toilets:disposal",
@@ -1095,16 +1196,6 @@
                 "no": "No: pathless, excellent orientation skills required"
             }
         }
-    },
-    "tree_type": {
-        "key": "type",
-        "type": "combo",
-        "label": "Type",
-        "options": [
-            "broad_leaved",
-            "conifer",
-            "palm"
-        ]
     },
     "trees": {
         "key": "trees",
@@ -1167,10 +1258,5 @@
         "icon": "wikipedia",
         "universal": true,
         "label": "Wikipedia"
-    },
-    "wood": {
-        "key": "wood",
-        "type": "combo",
-        "label": "Type"
     }
 }

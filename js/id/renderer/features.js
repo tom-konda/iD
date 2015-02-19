@@ -71,8 +71,8 @@ iD.Features = function(context) {
     }
 
 
-    defineFeature('points', function isPoint(entity, resolver) {
-        return entity.geometry(resolver) === 'point';
+    defineFeature('points', function isPoint(entity, resolver, geometry) {
+        return geometry === 'point';
     }, 200);
 
     defineFeature('major_roads', function isMajorRoad(entity) {
@@ -99,8 +99,8 @@ iD.Features = function(context) {
         );
     }, 250);
 
-    defineFeature('landuse', function isLanduse(entity, resolver) {
-        return entity.geometry(resolver) === 'area' &&
+    defineFeature('landuse', function isLanduse(entity, resolver, geometry) {
+        return geometry === 'area' &&
             !_features.buildings.filter(entity) &&
             !_features.water.filter(entity);
     });
@@ -155,19 +155,18 @@ iD.Features = function(context) {
     });
 
     // lines or areas that don't match another feature filter.
-    defineFeature('others', function isOther(entity, resolver) {
-        var geom = entity.geometry(resolver);
-        return (geom === 'line' || geom === 'area') && !(
-            _features.major_roads.filter(entity, resolver) ||
-            _features.minor_roads.filter(entity, resolver) ||
-            _features.paths.filter(entity, resolver) ||
-            _features.buildings.filter(entity, resolver) ||
-            _features.landuse.filter(entity, resolver) ||
-            _features.boundaries.filter(entity, resolver) ||
-            _features.water.filter(entity, resolver) ||
-            _features.rail.filter(entity, resolver) ||
-            _features.power.filter(entity, resolver) ||
-            _features.past_future.filter(entity, resolver)
+    defineFeature('others', function isOther(entity, resolver, geometry) {
+        return (geometry === 'line' || geometry === 'area') && !(
+            _features.major_roads.filter(entity, resolver, geometry) ||
+            _features.minor_roads.filter(entity, resolver, geometry) ||
+            _features.paths.filter(entity, resolver, geometry) ||
+            _features.buildings.filter(entity, resolver, geometry) ||
+            _features.landuse.filter(entity, resolver, geometry) ||
+            _features.boundaries.filter(entity, resolver, geometry) ||
+            _features.water.filter(entity, resolver, geometry) ||
+            _features.rail.filter(entity, resolver, geometry) ||
+            _features.power.filter(entity, resolver, geometry) ||
+            _features.past_future.filter(entity, resolver, geometry)
         );
     });
 
@@ -238,7 +237,7 @@ iD.Features = function(context) {
 
     features.gatherStats = function(d, resolver, dimensions) {
         var needsRedraw = false,
-            currHidden, geometry, feats;
+            currHidden, geometry, matches;
 
         _.each(_features, function(f) { f.count = 0; });
 
@@ -249,9 +248,9 @@ iD.Features = function(context) {
         for (var i = 0, imax = d.length; i !== imax; i++) {
             geometry = d[i].geometry(resolver);
             if (!(geometry === 'vertex' || geometry === 'relation')) {
-                feats = Object.keys(features.matchEntity(d[i], resolver));
-                for (var j = 0, jmax = feats.length; j !== jmax; j++) {
-                    _features[feats[j]].count++;
+                matches = Object.keys(features.getMatches(d[i], resolver, geometry));
+                for (var j = 0, jmax = matches.length; j !== jmax; j++) {
+                    _features[matches[j]].count++;
                 }
             }
         }
@@ -285,18 +284,14 @@ iD.Features = function(context) {
         _cache = {};
     };
 
-    features.match = function(d) {
-        for (var i = 0, imax = d.length; i !== imax; i++) {
-            features.matchEntity(d[i]);
-        }
-    };
-
-    features.matchEntity = function(entity, resolver) {
+    features.getMatches = function(entity, resolver, geometry) {
         var ent = iD.Entity.key(entity);
 
         if (!_cache[ent]) {
-            var geometry = entity.geometry(resolver),
-                matches = {},
+            _cache[ent] = {};
+        }
+        if (!_cache[ent].matches) {
+            var matches = {},
                 hasMatch = false;
 
             if (!(geometry === 'vertex' || geometry === 'relation')) {
@@ -304,20 +299,41 @@ iD.Features = function(context) {
                     if (hasMatch && _keys[i] === 'others') {
                         continue;
                     }
-                    if (_features[_keys[i]].filter(entity, resolver)) {
+                    if (_features[_keys[i]].filter(entity, resolver, geometry)) {
                         matches[_keys[i]] = hasMatch = true;
                     }
                 }
             }
-            _cache[ent] = matches;
+            _cache[ent].matches = matches;
         }
-        return _cache[ent];
+        return _cache[ent].matches;
     };
 
-    features.isHiddenFeature = function(entity, resolver) {
-        var matches = features.matchEntity(entity, resolver);
+    features.getParents = function(entity, resolver, geometry) {
+        var ent = iD.Entity.key(entity);
 
+        if (!_cache[ent]) {
+            _cache[ent] = {};
+        }
+        if (!_cache[ent].parents) {
+            var parents = [];
+
+            if (geometry !== 'point') {
+                if (geometry === 'vertex') {
+                    parents = resolver.parentWays(entity);
+                } else {   // 'line', 'area', 'relation'
+                    parents = resolver.parentRelations(entity);
+                }
+            }
+            _cache[ent].parents = parents;
+        }
+        return _cache[ent].parents;
+    };
+
+    features.isHiddenFeature = function(entity, resolver, geometry) {
         if (!entity.version) return false;
+
+        var matches = features.getMatches(entity, resolver, geometry);
 
         for (var i = 0, imax = _hidden.length; i !== imax; i++) {
             if (matches[_hidden[i]]) { return true; }
@@ -325,22 +341,15 @@ iD.Features = function(context) {
         return false;
     };
 
-    features.isHiddenChild = function(entity, resolver, geom) {
-        var geometry = geom || entity.geometry(resolver),
-            parents;
-
+    features.isHiddenChild = function(entity, resolver, geometry) {
         if (!entity.version || geometry === 'point') { return false; }
 
-        if (geometry === 'vertex') {
-            parents = resolver.parentWays(entity);
-        } else {   // 'line', 'area', 'relation'
-            parents = resolver.parentRelations(entity);
-        }
+        var parents = features.getParents(entity, resolver, geometry);
 
         if (!parents.length) { return false; }
 
         for (var i = 0, imax = parents.length; i !== imax; i++) {
-            if (!features.isHidden(parents[i], resolver)) {
+            if (!features.isHidden(parents[i], resolver, parents[i].geometry(resolver))) {
                 return false;
             }
         }
@@ -352,49 +361,47 @@ iD.Features = function(context) {
 
         if (entity.type === 'midpoint') {
             childNodes = [resolver.entity(entity.edge[0]), resolver.entity(entity.edge[1])];
+            connections = [];
         } else {
             childNodes = resolver.childNodes(entity);
+            connections = features.getParents(entity, resolver, entity.geometry(resolver));
         }
 
-        // gather parents..
-        connections = _.union(resolver.parentWays(entity), resolver.parentRelations(entity));
         // gather ways connected to child nodes..
         connections = _.reduce(childNodes, function(result, e) {
             return resolver.isShared(e) ? _.union(result, resolver.parentWays(e)) : result;
         }, connections);
 
         return connections.length ? _.any(connections, function(e) {
-            return features.isHidden(e, resolver);
+            return features.isHidden(e, resolver, e.geometry(resolver));
         }) : false;
     };
 
-    features.isHidden = function(entity, resolver) {
-        var geometry;
-
+    features.isHidden = function(entity, resolver, geometry) {
         if (!entity.version) return false;
         if (features.isFocusedFeature(entity)) return false;
 
-        geometry = entity.geometry(resolver);
-        if (geometry === 'vertex') return features.isHiddenChild(entity, resolver, geometry);
-        if (geometry === 'point')  return features.isHiddenFeature(entity, resolver);
+        if (geometry === 'vertex')
+            return features.isHiddenChild(entity, resolver, geometry);
+        if (geometry === 'point')
+            return features.isHiddenFeature(entity, resolver, geometry);
 
-        return (features.isHiddenFeature(entity, resolver) ||
-            features.isHiddenChild(entity, resolver, geometry));
+        return features.isHiddenFeature(entity, resolver, geometry) ||
+               features.isHiddenChild(entity, resolver, geometry);
     };
 
     features.filter = function(d, resolver) {
-        var result = [];
-
-        if (!_hidden.length) {
+        if (!_hidden.length)
             return d;
-        } else {
-            for (var i = 0, imax = d.length; i !== imax; i++) {
-                if (!features.isHidden(d[i], resolver)) {
-                    result.push(d[i]);
-                }
+
+        var result = [];
+        for (var i = 0, imax = d.length; i !== imax; i++) {
+            var entity = d[i];
+            if (!features.isHidden(entity, resolver, entity.geometry(resolver))) {
+                result.push(entity);
             }
-            return result;
         }
+        return result;
     };
 
     features.isFocusedFeature = function(entity) {

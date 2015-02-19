@@ -137,6 +137,12 @@ iD.Map = function(context) {
         dispatch.drawn({full: true});
     }
 
+    function editOff() {
+        context.features().resetStats();
+        surface.selectAll('.layer *').remove();
+        dispatch.drawn({full: true});
+    }
+
     function zoomPan() {
         if (d3.event && d3.event.sourceEvent.type === 'dblclick') {
             if (!dblclickEnabled) {
@@ -317,6 +323,13 @@ iD.Map = function(context) {
     map.zoom = function(z) {
         if (!arguments.length) {
             return Math.max(Math.log(projection.scale() * 2 * Math.PI) / Math.LN2 - 8, 0);
+        }
+
+        if (z < minzoom) {
+            iD.ui.flash(context.container())
+                .select('.content')
+                .text(t('cannot_zoom'));
+            z = context.minEditableZoom();
         }
 
         if (setZoom(z)) {
