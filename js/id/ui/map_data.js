@@ -57,7 +57,15 @@ iD.ui.MapData = function(context) {
                 .call(bootstrap.tooltip()
                     .html(true)
                     .title(function(d) {
-                        var tip = t(name + '.' + d + '.tooltip'),
+                        var tip,
+                            key;
+
+                        if (d === 'focused') {
+                            var focusedEntity = context.entity(context.focusedID());
+                            tip = iD.util.displayName(focusedEntity);
+                        } else {
+                            tip = t(name + '.' + d + '.tooltip');
+                        }
                             key = (d === 'wireframe' ? 'W' : null);
 
                         if (name === 'feature' && autoHiddenFeature(d)) {
