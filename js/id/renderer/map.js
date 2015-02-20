@@ -206,9 +206,11 @@ iD.Map = function(context) {
 
         if (map.editable()) {
             context.connection().loadTiles(projection, dimensions);
+            drawVector(difference, extent);
+        } else {
+            editOff();
         }
 
-        drawVector(difference, extent);
 
         transformStart = [
             projection.scale() * 2 * Math.PI,
