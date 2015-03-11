@@ -137,12 +137,6 @@ iD.Map = function(context) {
         dispatch.drawn({full: true});
     }
 
-    function editOff() {
-        context.features().resetStats();
-        surface.selectAll('.layer *').remove();
-        dispatch.drawn({full: true});
-    }
-
     function zoomPan() {
         if (d3.event && d3.event.sourceEvent.type === 'dblclick') {
             if (!dblclickEnabled) {
@@ -204,12 +198,12 @@ iD.Map = function(context) {
             supersurface.call(context.background());
         }
 
-        if (map.editable()) {
+        // if zoom is 16+ loadTiles.
+        if (map.zoom() >= context.minEditableZoom()) {
             context.connection().loadTiles(projection, dimensions);
-            drawVector(difference, extent);
-        } else {
-            editOff();
         }
+
+        drawVector(difference, extent);
 
 
         transformStart = [
