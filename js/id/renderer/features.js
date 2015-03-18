@@ -154,6 +154,7 @@ iD.Features = function(context) {
         return false;
     });
 
+
     // lines or areas that don't match another feature filter.
     defineFeature('others', function isOther(entity, resolver, geometry) {
         return (geometry === 'line' || geometry === 'area') && !(
@@ -172,7 +173,8 @@ iD.Features = function(context) {
 
     // Features selected via the URL hash.
     defineFeature('focused', function(entity) {
-        return entity.id === context.focusedID();
+        return (entity.id === context.focusedID()) ||
+            ((entity.id === context.focusedID() && entity.type === 'relation') && (entity.members || entity.tags.boundary));
     });
 
     function features() {}
@@ -247,7 +249,7 @@ iD.Features = function(context) {
 
         for (var i = 0, imax = d.length; i !== imax; i++) {
             geometry = d[i].geometry(resolver);
-            if (!(geometry === 'vertex' || geometry === 'relation')) {
+            if (!(geometry === 'vertex')) {
                 matches = Object.keys(features.getMatches(d[i], resolver, geometry));
                 for (var j = 0, jmax = matches.length; j !== jmax; j++) {
                     _features[matches[j]].count++;
@@ -294,7 +296,7 @@ iD.Features = function(context) {
             var matches = {},
                 hasMatch = false;
 
-            if (!(geometry === 'vertex' || geometry === 'relation')) {
+            if (!(geometry === 'vertex')) {
                 for (var i = 0, imax = _keys.length; i !== imax; i++) {
                     if (hasMatch && _keys[i] === 'others') {
                         continue;
@@ -311,6 +313,7 @@ iD.Features = function(context) {
 
     features.getParents = function(entity, resolver, geometry) {
         var ent = iD.Entity.key(entity);
+        // console.log(entity.id);
 
         if (!_cache[ent]) {
             _cache[ent] = {};
