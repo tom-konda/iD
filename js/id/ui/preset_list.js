@@ -21,15 +21,14 @@ iD.ui.PresetList = function(context) {
                 .attr('class', 'preset-choose')
                 .on('click', function() { event.choose(currentPreset); })
                 .append('span')
-                .attr('class', 'icon forward');
+                .html('&#9658;');
         } else {
             messagewrap.append('button')
                 .attr('class', 'close')
                 .on('click', function() {
                     context.enter(iD.modes.Browse(context));
                 })
-                .append('span')
-                .attr('class', 'icon close');
+                .call(iD.svg.Icon('#icon-close'));
         }
 
         function keydown() {
@@ -86,8 +85,8 @@ iD.ui.PresetList = function(context) {
             .on('keypress', keypress)
             .on('input', inputevent);
 
-        searchWrap.append('span')
-            .attr('class', 'icon search');
+        searchWrap
+            .call(iD.svg.Icon('#icon-search', 'pre-text'));
 
         if (autofocus) {
             search.node().focus();
@@ -134,13 +133,22 @@ iD.ui.PresetList = function(context) {
 
             wrap.append('button')
                 .attr('class', 'preset-list-button')
+                .classed('expanded', false)
                 .call(iD.ui.PresetIcon()
                     .geometry(context.geometry(id))
                     .preset(preset))
-                .on('click', item.choose)
+                .on('click', function() {
+                    var isExpanded = d3.select(this).classed('expanded');
+                    var triangle = isExpanded ? '▶ ' :  '▼ ';
+                    d3.select(this).classed('expanded', !isExpanded);
+                    d3.select(this).selectAll('.label').text(triangle + preset.name());
+                    item.choose();
+                })
                 .append('div')
                 .attr('class', 'label')
-                .text(preset.name());
+                .text(function() {
+                  return '▶ ' + preset.name();
+                });
 
             box = selection.append('div')
                 .attr('class', 'subgrid col12')
@@ -155,6 +163,8 @@ iD.ui.PresetList = function(context) {
         }
 
         item.choose = function() {
+            if (!box || !sublist) return;
+
             if (shown) {
                 shown = false;
                 box.transition()

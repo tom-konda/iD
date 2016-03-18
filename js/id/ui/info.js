@@ -1,6 +1,7 @@
 iD.ui.Info = function(context) {
     var key = iD.ui.cmd('⌘I'),
-        imperial = (iD.detect().locale.toLowerCase() === 'en-us');
+        imperial = (iD.detect().locale.toLowerCase() === 'en-us'),
+        hidden = true;
 
     function info(selection) {
         function radiansToMeters(r) {
@@ -11,6 +12,19 @@ iD.ui.Info = function(context) {
         function steradiansToSqmeters(r) {
             // http://gis.stackexchange.com/a/124857/40446
             return r / 12.56637 * 510065621724000;
+        }
+
+        function toLineString(feature) {
+            if (feature.type === 'LineString') return feature;
+
+            var result = { type: 'LineString', coordinates: [] };
+            if (feature.type === 'Polygon') {
+                result.coordinates = feature.coordinates[0];
+            } else if (feature.type === 'MultiPolygon') {
+                result.coordinates = feature.coordinates[0][0];
+            }
+
+            return result;
         }
 
         function displayLength(m) {
@@ -82,17 +96,17 @@ iD.ui.Info = function(context) {
 
 
         function redraw() {
-            if (hidden()) return;
+            if (hidden) return;
 
             var resolver = context.graph(),
-                selected = context.selectedIDs(),
+                selected = _.filter(context.selectedIDs(), function(e) { return context.hasEntity(e); }),
                 singular = selected.length === 1 ? selected[0] : null,
                 extent = iD.geo.Extent(),
                 entity;
 
-            selection.html('');
-            selection.append('h4')
-                .attr('class', 'selection-heading fillD')
+            wrap.html('');
+            wrap.append('h4')
+                .attr('class', 'infobox-heading fillD')
                 .text(singular || t('infobox.selected', { n: selected.length }));
 
             if (!selected.length) return;
@@ -105,23 +119,23 @@ iD.ui.Info = function(context) {
             center = extent.center();
 
 
-            var list = selection.append('ul');
+            var list = wrap.append('ul');
 
-            // multiple selection, just display extent center..
+            // multiple wrap, just display extent center..
             if (!singular) {
                 list.append('li')
                     .text(t('infobox.center') + ': ' + center[0].toFixed(5) + ', ' + center[1].toFixed(5));
                 return;
             }
 
-            // single selection, display details..
+            // single wrap, display details..
             if (!entity) return;
             var geometry = entity.geometry(resolver);
 
             if (geometry === 'line' || geometry === 'area') {
                 var closed = (entity.type === 'relation') || (entity.isClosed() && !entity.isDegenerate()),
                     feature = entity.asGeoJSON(resolver),
-                    length = radiansToMeters(d3.geo.length(feature)),
+                    length = radiansToMeters(d3.geo.length(toLineString(feature))),
                     lengthLabel = t('infobox.' + (closed ? 'perimeter' : 'length')),
                     centroid = d3.geo.centroid(feature);
 
@@ -143,7 +157,7 @@ iD.ui.Info = function(context) {
 
 
                 var toggle  = imperial ? 'imperial' : 'metric';
-                selection.append('a')
+                wrap.append('a')
                     .text(t('infobox.' + toggle))
                     .attr('href', '#')
                     .attr('class', 'button')
@@ -165,26 +179,13 @@ iD.ui.Info = function(context) {
         }
 
 
-        function hidden() {
-            return selection.style('display') === 'none';
-        }
-
-
         function toggle() {
             if (d3.event) d3.event.preventDefault();
 
-            if (hidden()) {
-                selection
-                    .style('display', 'block')
-                    .style('opacity', 0)
-                    .transition()
-                    .duration(200)
-                    .style('opacity', 1);
+            hidden = !hidden;
 
-                redraw();
-
-            } else {
-                selection
+            if (hidden) {
+                wrap
                     .style('display', 'block')
                     .style('opacity', 1)
                     .transition()
@@ -193,8 +194,26 @@ iD.ui.Info = function(context) {
                     .each('end', function() {
                         d3.select(this).style('display', 'none');
                     });
+            } else {
+                wrap
+                    .style('display', 'block')
+                    .style('opacity', 0)
+                    .transition()
+                    .duration(200)
+                    .style('opacity', 1);
+
+                redraw();
             }
         }
+
+
+        var wrap = selection.selectAll('.infobox')
+            .data([0]);
+
+        wrap.enter()
+            .append('div')
+            .attr('class', 'infobox fillD2')
+            .style('display', (hidden ? 'none' : 'block'));
 
         context.map()
             .on('drawn.info', redraw);

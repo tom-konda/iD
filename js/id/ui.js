@@ -9,7 +9,7 @@ iD.ui = function(context) {
         hash();
 
         if (!hash.hadHash) {
-            map.centerZoom([-77.02271, 38.90085], 20);
+            map.centerZoom([0, 0], 2);
         }
 
         container.append('svg')
@@ -28,18 +28,14 @@ iD.ui = function(context) {
             .attr('id', 'bar')
             .attr('class', 'fillD');
 
-        var m = content.append('div')
+        content.append('div')
             .attr('id', 'map')
             .call(map);
 
-        content.append('div')
-            .attr('class', 'map-in-map')
-            .style('display', 'none')
+        content
             .call(iD.ui.MapInMap(context));
 
         content.append('div')
-            .attr('class', 'infobox fillD2')
-            .style('display', 'none')
             .call(iD.ui.Info(context));
 
         bar.append('div')
@@ -61,6 +57,10 @@ iD.ui = function(context) {
             .call(iD.ui.Save(context));
 
         bar.append('div')
+            .attr('class', 'full-screen')
+            .call(iD.ui.FullScreen(context));
+
+        bar.append('div')
             .attr('class', 'spinner')
             .call(iD.ui.Spinner(context));
 
@@ -73,7 +73,7 @@ iD.ui = function(context) {
 
         controls.append('div')
             .attr('class', 'map-control geolocate-control')
-            .call(iD.ui.Geolocate(map));
+            .call(iD.ui.Geolocate(context));
 
         controls.append('div')
             .attr('class', 'map-control background-control')
@@ -119,20 +119,28 @@ iD.ui = function(context) {
             .append('a')
             .attr('target', '_blank')
             .attr('tabindex', -1)
-            .attr('href', 'http://github.com/openstreetmap/iD')
+            .attr('href', 'https://github.com/openstreetmap/iD')
             .text(iD.version);
 
-        var bugReport = aboutList.append('li')
-            .append('a')
+        var issueLinks = aboutList.append('li');
+
+        issueLinks.append('a')
             .attr('target', '_blank')
             .attr('tabindex', -1)
-            .attr('href', 'https://github.com/openstreetmap/iD/issues');
-
-        bugReport.append('span')
-            .attr('class','icon bug light');
-
-        bugReport.call(bootstrap.tooltip()
+            .attr('href', 'https://github.com/openstreetmap/iD/issues')
+            .call(iD.svg.Icon('#icon-bug', 'light'))
+            .call(bootstrap.tooltip()
                 .title(t('report_a_bug'))
+                .placement('top')
+            );
+
+        issueLinks.append('a')
+            .attr('target', '_blank')
+            .attr('tabindex', -1)
+            .attr('href', 'https://github.com/openstreetmap/iD/blob/master/CONTRIBUTING.md#translating')
+            .call(iD.svg.Icon('#icon-translate', 'light'))
+            .call(bootstrap.tooltip()
+                .title(t('help_translate'))
                 .placement('top')
             );
 
@@ -157,14 +165,14 @@ iD.ui = function(context) {
         var mapDimensions = map.dimensions();
 
         d3.select(window).on('resize.editor', function() {
-            mapDimensions = m.dimensions();
-            map.dimensions(m.dimensions());
+            mapDimensions = content.dimensions(null);
+            map.dimensions(mapDimensions);
         });
 
         function pan(d) {
             return function() {
                 d3.event.preventDefault();
-                context.pan(d);
+                if (!context.inIntro()) context.pan(d);
             };
         }
 

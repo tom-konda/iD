@@ -2,23 +2,26 @@ iD.Map = function(context) {
     var dimensions = [1, 1],
         dispatch = d3.dispatch('move', 'drawn'),
         projection = context.projection,
-        roundedProjection = iD.svg.RoundProjection(projection),
         zoom = d3.behavior.zoom()
             .translate(projection.translate())
             .scale(projection.scale() * 2 * Math.PI)
             .scaleExtent([1024, 256 * Math.pow(2, 24)])
             .on('zoom', zoomPan),
         dblclickEnabled = true,
+        redrawEnabled = true,
         transformStart,
         transformed = false,
         minzoom = 0,
-        points = iD.svg.Points(roundedProjection, context),
-        vertices = iD.svg.Vertices(roundedProjection, context),
-        lines = iD.svg.Lines(projection),
-        areas = iD.svg.Areas(projection),
-        midpoints = iD.svg.Midpoints(roundedProjection, context),
-        labels = iD.svg.Labels(projection, context),
-        supersurface, surface,
+        drawLayers = iD.svg.Layers(projection, context),
+        drawPoints = iD.svg.Points(projection, context),
+        drawVertices = iD.svg.Vertices(projection, context),
+        drawLines = iD.svg.Lines(projection),
+        drawAreas = iD.svg.Areas(projection),
+        drawMidpoints = iD.svg.Midpoints(projection, context),
+        drawLabels = iD.svg.Labels(projection, context),
+        supersurface,
+        wrapper,
+        surface,
         mouse,
         mousemove;
 
@@ -29,20 +32,32 @@ iD.Map = function(context) {
             .on('change.map', redraw);
         context.features()
             .on('redraw.map', redraw);
+        drawLayers
+            .on('change.map', function() {
+                context.background().updateImagery();
+                redraw();
+            });
 
         selection
             .on('dblclick.map', dblClick)
             .call(zoom);
 
         supersurface = selection.append('div')
-            .attr('id', 'supersurface');
+            .attr('id', 'supersurface')
+            .call(iD.util.setTransform, 0, 0);
 
         // Need a wrapper div because Opera can't cope with an absolutely positioned
         // SVG element: http://bl.ocks.org/jfirebaugh/6fbfbd922552bf776c16
-        var dataLayer = supersurface.append('div')
-            .attr('class', 'layer-layer layer-data');
+        wrapper = supersurface
+            .append('div')
+            .attr('class', 'layer layer-data');
 
-        map.surface = surface = dataLayer.append('svg')
+        map.surface = surface = wrapper
+            .call(drawLayers)
+            .selectAll('.surface')
+            .attr('id', 'surface');
+
+        surface
             .on('mousedown.zoom', function() {
                 if (d3.event.button === 2) {
                     d3.event.stopPropagation();
@@ -51,30 +66,28 @@ iD.Map = function(context) {
             .on('mouseup.zoom', function() {
                 if (resetTransform()) redraw();
             })
-            .attr('id', 'surface')
-            .call(iD.svg.Surface(context));
+            .on('mousemove.map', function() {
+                mousemove = d3.event;
+            })
+            .on('mouseover.vertices', function() {
+                if (map.editable() && !transformed) {
+                    var hover = d3.event.target.__data__;
+                    surface.call(drawVertices.drawHover, context.graph(), hover, map.extent(), map.zoom());
+                    dispatch.drawn({full: false});
+                }
+            })
+            .on('mouseout.vertices', function() {
+                if (map.editable() && !transformed) {
+                    var hover = d3.event.relatedTarget && d3.event.relatedTarget.__data__;
+                    surface.call(drawVertices.drawHover, context.graph(), hover, map.extent(), map.zoom());
+                    dispatch.drawn({full: false});
+                }
+            });
 
-        supersurface.call(context.background());
 
-        surface.on('mousemove.map', function() {
-            mousemove = d3.event;
-        });
+        supersurface
+            .call(context.background());
 
-        surface.on('mouseover.vertices', function() {
-            if (map.editable() && !transformed) {
-                var hover = d3.event.target.__data__;
-                surface.call(vertices.drawHover, context.graph(), hover, map.extent(), map.zoom());
-                dispatch.drawn({full: false});
-            }
-        });
-
-        surface.on('mouseout.vertices', function() {
-            if (map.editable() && !transformed) {
-                var hover = d3.event.relatedTarget && d3.event.relatedTarget.__data__;
-                surface.call(vertices.drawHover, context.graph(), hover, map.extent(), map.zoom());
-                dispatch.drawn({full: false});
-            }
-        });
 
         context.on('enter.map', function() {
             if (map.editable() && !transformed) {
@@ -83,15 +96,16 @@ iD.Map = function(context) {
                     graph = context.graph();
 
                 all = context.features().filter(all, graph);
-                surface.call(vertices, graph, all, filter, map.extent(), map.zoom());
-                surface.call(midpoints, graph, all, filter, map.trimmedExtent());
+                surface
+                    .call(drawVertices, graph, all, filter, map.extent(), map.zoom())
+                    .call(drawMidpoints, graph, all, filter, map.trimmedExtent());
                 dispatch.drawn({full: false});
             }
         });
 
         map.dimensions(selection.dimensions());
 
-        labels.supersurface(supersurface);
+        drawLabels.supersurface(supersurface);
     }
 
     function pxCenter() { return [dimensions[0] / 2, dimensions[1] / 2]; }
@@ -129,19 +143,19 @@ iD.Map = function(context) {
         data = features.filter(data, graph);
 
         surface
-            .call(vertices, graph, data, filter, map.extent(), map.zoom())
-            .call(lines, graph, data, filter)
-            .call(areas, graph, data, filter)
-            .call(midpoints, graph, data, filter, map.trimmedExtent())
-            .call(labels, graph, data, filter, dimensions, !difference && !extent)
-            .call(points, data, filter);
+            .call(drawVertices, graph, data, filter, map.extent(), map.zoom())
+            .call(drawLines, graph, data, filter)
+            .call(drawAreas, graph, data, filter)
+            .call(drawMidpoints, graph, data, filter, map.trimmedExtent())
+            .call(drawLabels, graph, data, filter, dimensions, !difference && !extent)
+            .call(drawPoints, graph, data, filter);
 
         dispatch.drawn({full: true});
     }
 
     function editOff() {
         context.features().resetStats();
-        surface.selectAll('.layer *').remove();
+        surface.selectAll('.layer-osm *').remove();
         dispatch.drawn({full: true});
     }
 
@@ -169,8 +183,8 @@ iD.Map = function(context) {
             .scale(d3.event.scale / (2 * Math.PI));
 
         var scale = d3.event.scale / transformStart[0],
-            tX = Math.round((d3.event.translate[0] / scale - transformStart[1][0]) * scale),
-            tY = Math.round((d3.event.translate[1] / scale - transformStart[1][1]) * scale);
+            tX = (d3.event.translate[0] / scale - transformStart[1][0]) * scale,
+            tY = (d3.event.translate[1] / scale - transformStart[1][1]) * scale;
 
         transformed = true;
         iD.util.setTransform(supersurface, tX, tY, scale);
@@ -181,14 +195,15 @@ iD.Map = function(context) {
 
     function resetTransform() {
         if (!transformed) return false;
+
+        surface.selectAll('.radial-menu').interrupt().remove();
         iD.util.setTransform(supersurface, 0, 0);
         transformed = false;
         return true;
     }
 
     function redraw(difference, extent) {
-
-        if (!surface) return;
+        if (!surface || !redrawEnabled) return;
 
         clearTimeout(timeoutId);
 
@@ -209,12 +224,16 @@ iD.Map = function(context) {
             supersurface.call(context.background());
         }
 
+        // OSM
         if (map.editable()) {
             context.loadTiles(projection, dimensions);
             drawVector(difference, extent);
         } else {
             editOff();
         }
+
+        wrapper
+            .call(drawLayers);
 
         transformStart = [
             projection.scale() * 2 * Math.PI,
@@ -254,6 +273,12 @@ iD.Map = function(context) {
     map.dblclickEnable = function(_) {
         if (!arguments.length) return dblclickEnabled;
         dblclickEnabled = _;
+        return map;
+    };
+
+    map.redrawEnable = function(_) {
+        if (!arguments.length) return redrawEnabled;
+        redrawEnabled = _;
         return map;
     };
 
@@ -319,7 +344,7 @@ iD.Map = function(context) {
         if (!arguments.length) return dimensions;
         var center = map.center();
         dimensions = _;
-        surface.dimensions(dimensions);
+        drawLayers.dimensions(dimensions);
         context.background().dimensions(dimensions);
         projection.clipExtent([[0, 0], dimensions]);
         mouse = iD.util.fastMouse(supersurface.node());
@@ -464,6 +489,8 @@ iD.Map = function(context) {
         minzoom = _;
         return map;
     };
+
+    map.layers = drawLayers;
 
     return d3.rebind(map, dispatch, 'on');
 };

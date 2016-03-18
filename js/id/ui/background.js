@@ -7,16 +7,24 @@ iD.ui.Background = function(context) {
             ['right', [-1, 0]],
             ['bottom', [0, 1]]],
         opacityDefault = (context.storage('background-opacity') !== null) ?
-            (+context.storage('background-opacity')) : 0.5,
+            (+context.storage('background-opacity')) : 1.0,
         customTemplate = context.storage('background-custom-template') || '';
 
     // Can be 0 from <1.3.0 use or due to issue #1923.
-    if (opacityDefault === 0) opacityDefault = 0.5;
+    if (opacityDefault === 0) opacityDefault = 1.0;
 
     function background(selection) {
 
+        function sortSources(a, b) {
+            return a.best() ? -1
+                : b.best() ? 1
+                : a.id === 'none' ? 1
+                : b.id === 'none' ? -1
+                : d3.ascending(a, b);
+        }
+
         function setOpacity(d) {
-            var bg = context.container().selectAll('.background-layer')
+            var bg = context.container().selectAll('.layer-background')
                 .transition()
                 .style('opacity', d)
                 .attr('data-opacity', d);
@@ -79,17 +87,28 @@ iD.ui.Background = function(context) {
                 .filter(filter);
 
             var layerLinks = layerList.selectAll('li.layer')
-                .data(sources, function(d) { return d.name(); });
+                .data(sources, function(d) { return d.name(); })
+                .sort(sortSources);
 
             var enter = layerLinks.enter()
                 .insert('li', '.custom_layer')
-                .attr('class', 'layer');
+                .attr('class', 'layer')
+                .classed('best', function(d) { return d.best(); });
 
             // only set tooltips for layers with tooltips
             enter.filter(function(d) { return d.description; })
                 .call(bootstrap.tooltip()
                     .title(function(d) { return d.description; })
                     .placement('top'));
+
+            enter.filter(function(d) { return d.best(); })
+                .append('div')
+                .attr('class', 'best')
+                .call(bootstrap.tooltip()
+                    .title(t('background.best_imagery'))
+                    .placement('left'))
+                .append('span')
+                .html('&#9733;');
 
             var label = enter.append('label');
 
@@ -120,7 +139,6 @@ iD.ui.Background = function(context) {
         }
 
         function clickNudge(d) {
-
             var timeout = window.setTimeout(function() {
                     interval = window.setInterval(nudge, 100);
                 }, 500),
@@ -186,12 +204,9 @@ iD.ui.Background = function(context) {
             button = selection.append('button')
                 .attr('tabindex', -1)
                 .on('click', toggle)
+                .call(iD.svg.Icon('#icon-layers', 'light'))
                 .call(tooltip),
             shown = false;
-
-        button.append('span')
-            .attr('class', 'icon layers light');
-
 
         var opa = content.append('div')
                 .attr('class', 'opacity-options-wrapper');
@@ -230,8 +245,7 @@ iD.ui.Background = function(context) {
                 .title(t('background.custom_button'))
                 .placement('left'))
             .on('click', editCustom)
-            .append('span')
-            .attr('class', 'icon geocode');
+            .call(iD.svg.Icon('#icon-search'));
 
         var label = custom.append('label');
 
@@ -248,6 +262,16 @@ iD.ui.Background = function(context) {
 
         label.append('span')
             .text(t('background.custom'));
+
+        content.append('div')
+          .attr('class', 'imagery-faq')
+          .append('a')
+          .attr('target', '_blank')
+          .attr('tabindex', -1)
+          .call(iD.svg.Icon('#icon-out-link', 'inline'))
+          .attr('href', 'https://github.com/openstreetmap/iD/blob/master/FAQ.md#how-can-i-report-an-issue-with-background-imagery')
+          .append('span')
+          .text(t('background.imagery_source_faq'));
 
         var overlayList = content.append('ul')
             .attr('class', 'layer-list');
@@ -299,15 +323,14 @@ iD.ui.Background = function(context) {
             .attr('class', function(d) { return d[0] + ' nudge'; })
             .on('mousedown', clickNudge);
 
-        var resetButton = nudgeContainer.append('button')
+        var resetButton = nudgeContainer
+            .append('button')
             .attr('class', 'reset disabled')
             .on('click', function () {
                 context.background().offset([0, 0]);
                 resetButton.classed('disabled', true);
-            });
-
-        resetButton.append('div')
-            .attr('class', 'icon undo');
+            })
+            .call(iD.svg.Icon('#icon-undo'));
 
         context.map()
             .on('move.background-update', _.debounce(update, 1000));

@@ -1,11 +1,9 @@
 iD.ui.preset.wikipedia = function(field, context) {
-
-    var event = d3.dispatch('change'),
-        wikipedia = iD.wikipedia(),
+    var dispatch = d3.dispatch('change'),
+        wikipedia = iD.services.wikipedia(),
         link, entity, lang, title;
 
     function i(selection) {
-
         var langcombo = d3.combobox()
             .fetcher(function(value, cb) {
                 var v = value.toLowerCase();
@@ -64,17 +62,19 @@ iD.ui.preset.wikipedia = function(field, context) {
         link.enter().append('a')
             .attr('class', 'wiki-link button-input-action minor')
             .attr('target', '_blank')
-            .append('span')
-            .attr('class', 'icon out-link');
+            .call(iD.svg.Icon('#icon-out-link', 'inline'));
     }
 
     function language() {
         var value = lang.value().toLowerCase();
+        var locale = iD.detect().locale.toLowerCase();
+        var localeLanguage;
         return _.find(iD.data.wikipedia, function(d) {
+            if (d[2] === locale) localeLanguage = d;
             return d[0].toLowerCase() === value ||
                 d[1].toLowerCase() === value ||
-                d[2].toLowerCase() === value;
-        }) || iD.data.wikipedia[0];
+                d[2] === value;
+        }) || localeLanguage || ['English', 'English', 'en'];
     }
 
     function changeLang() {
@@ -107,7 +107,7 @@ iD.ui.preset.wikipedia = function(field, context) {
 
         var t = {};
         t[field.key] = value ? language()[2] + ':' + value : undefined;
-        event.change(t);
+        dispatch.change(t);
     }
 
     i.tags = function(tags) {
@@ -128,13 +128,13 @@ iD.ui.preset.wikipedia = function(field, context) {
                     anchor = anchor.replace(/ /g, '_');
                 }
             }
-            link.attr('href', 'http://' + m[1] + '.wikipedia.org/wiki/' +
+            link.attr('href', 'https://' + m[1] + '.wikipedia.org/wiki/' +
                       m[2].replace(/ /g, '_') + (anchor ? ('#' + anchor) : ''));
 
         // unrecognized value format
         } else {
             title.value(value);
-            link.attr('href', 'http://en.wikipedia.org/wiki/Special:Search?search=' + value);
+            link.attr('href', 'https://en.wikipedia.org/wiki/Special:Search?search=' + value);
         }
     };
 
@@ -146,5 +146,5 @@ iD.ui.preset.wikipedia = function(field, context) {
         title.node().focus();
     };
 
-    return d3.rebind(i, event, 'on');
+    return d3.rebind(i, dispatch, 'on');
 };

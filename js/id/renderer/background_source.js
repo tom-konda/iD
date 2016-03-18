@@ -1,7 +1,8 @@
 iD.BackgroundSource = function(data) {
     var source = _.clone(data),
         offset = [0, 0],
-        name = source.name;
+        name = source.name,
+        best = !!source.best;
 
     source.scaleExtent = data.scaleExtent || [0, 20];
     source.overzoom = data.overzoom !== false;
@@ -20,6 +21,10 @@ iD.BackgroundSource = function(data) {
 
     source.name = function() {
         return name;
+    };
+
+    source.best = function() {
+        return best;
     };
 
     source.imageryUsed = function() {
@@ -53,7 +58,7 @@ iD.BackgroundSource = function(data) {
     source.intersects = function(extent) {
         extent = extent.polygon();
         return !data.polygon || data.polygon.some(function(polygon) {
-            return iD.geo.polygonIntersectsPolygon(polygon, extent);
+            return iD.geo.polygonIntersectsPolygon(polygon, extent, true);
         });
     };
 
@@ -112,7 +117,7 @@ iD.BackgroundSource.Bing = function(data, dispatch) {
     };
 
     bing.logo = 'bing_maps.png';
-    bing.terms_url = 'http://opengeodata.org/microsoft-imagery-details';
+    bing.terms_url = 'https://blog.openstreetmap.org/2010/11/30/microsoft-imagery-details';
 
     return bing;
 };

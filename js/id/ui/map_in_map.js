@@ -2,21 +2,18 @@ iD.ui.MapInMap = function(context) {
     var key = '/';
 
     function map_in_map(selection) {
-
         var backgroundLayer = iD.TileLayer(),
-            dispatch = d3.dispatch('change'),
-            gpxLayer = iD.GpxLayer(context, dispatch),
-            overlayLayer = iD.TileLayer(),
+            overlayLayers = {},
             projection = iD.geo.RawMercator(),
+            gpxLayer = iD.svg.Gpx(projection, context).showLabels(false),
             zoom = d3.behavior.zoom()
                 .scaleExtent([ztok(0.5), ztok(24)])
                 .on('zoom', zoomPan),
             transformed = false,
             panning = false,
+            hidden = true,
             zDiff = 6,    // by default, minimap renders at (main zoom - 6)
-            tStart, tLast, tCurr, kLast, kCurr, tiles, svg, gpx, timeoutId;
-
-        iD.ui.MapInMap.gpxLayer = gpxLayer;
+            tStart, tLast, tCurr, kLast, kCurr, tiles, svg, timeoutId;
 
         function ztok(z) { return 256 * Math.pow(2, z); }
         function ktoz(k) { return Math.log(k) / Math.LN2 - 8; }
@@ -50,12 +47,11 @@ iD.ui.MapInMap = function(context) {
             zDiff = zMain - zMini;
 
             var scale = kCurr / kLast,
-                tX = Math.round((tCurr[0] / scale - tLast[0]) * scale),
-                tY = Math.round((tCurr[1] / scale - tLast[1]) * scale);
+                tX = (tCurr[0] / scale - tLast[0]) * scale,
+                tY = (tCurr[1] / scale - tLast[1]) * scale;
 
             iD.util.setTransform(tiles, tX, tY, scale);
             iD.util.setTransform(svg, 0, 0, scale);
-            iD.util.setTransform(gpx, 0, 0, scale);
             transformed = true;
 
             queueRedraw();
@@ -73,7 +69,7 @@ iD.ui.MapInMap = function(context) {
             panning = false;
 
             if (tCurr[0] !== tStart[0] && tCurr[1] !== tStart[1]) {
-                var dMini = selection.dimensions(),
+                var dMini = wrap.dimensions(),
                     cMini = [ dMini[0] / 2, dMini[1] / 2 ];
 
                 context.map().center(projection.invert(cMini));
@@ -83,7 +79,7 @@ iD.ui.MapInMap = function(context) {
 
         function updateProjection() {
             var loc = context.map().center(),
-                dMini = selection.dimensions(),
+                dMini = wrap.dimensions(),
                 cMini = [ dMini[0] / 2, dMini[1] / 2 ],
                 tMain = context.projection.translate(),
                 kMain = context.projection.scale(),
@@ -117,22 +113,21 @@ iD.ui.MapInMap = function(context) {
             if (transformed) {
                 iD.util.setTransform(tiles, 0, 0);
                 iD.util.setTransform(svg, 0, 0);
-                iD.util.setTransform(gpx, 0, 0);
                 transformed = false;
             }
         }
 
 
         function redraw() {
-            if (hidden()) return;
+            if (hidden) return;
 
             updateProjection();
 
-            var dMini = selection.dimensions(),
+            var dMini = wrap.dimensions(),
                 zMini = ktoz(projection.scale() * 2 * Math.PI);
 
             // setup tile container
-            tiles = selection
+            tiles = wrap
                 .selectAll('.map-in-map-tiles')
                 .data([0]);
 
@@ -158,58 +153,61 @@ iD.ui.MapInMap = function(context) {
             background
                 .call(backgroundLayer);
 
-            // redraw overlay
-            var overlaySources = context.background().overlayLayerSources(),
-                hasOverlay = false;
 
+            // redraw overlay
+            var overlaySources = context.background().overlayLayerSources();
+            var activeOverlayLayers = [];
             for (var i = 0; i < overlaySources.length; i++) {
                 if (overlaySources[i].validZoom(zMini)) {
-                    overlayLayer
+                    if (!overlayLayers[i]) overlayLayers[i] = iD.TileLayer();
+                    activeOverlayLayers.push(overlayLayers[i]
                         .source(overlaySources[i])
                         .projection(projection)
-                        .dimensions(dMini);
-
-                    hasOverlay = true;
-                    break;
+                        .dimensions(dMini));
                 }
             }
 
             var overlay = tiles
                 .selectAll('.map-in-map-overlay')
-                .data(hasOverlay ? [0] : []);
+                .data([0]);
 
             overlay.enter()
                 .append('div')
                 .attr('class', 'map-in-map-overlay');
 
-            overlay.exit()
+            var overlays = overlay
+                .selectAll('div')
+                .data(activeOverlayLayers, function(d) { return d.source().name(); });
+
+            overlays.enter().append('div');
+            overlays.each(function(layer) {
+                d3.select(this).call(layer);
+            });
+
+            overlays.exit()
                 .remove();
 
-            if (hasOverlay) {
-                overlay
-                    .call(overlayLayer);
-            }
 
-            gpxLayer
-                .projection(projection);
-
-            gpx = tiles
+            var gpx = tiles
                 .selectAll('.map-in-map-gpx')
-                .data([0]);
+                .data(gpxLayer.enabled() ? [0] : []);
 
             gpx.enter()
-                .append('div')
+                .append('svg')
                 .attr('class', 'map-in-map-gpx');
 
+            gpx.exit()
+                .remove();
+
             gpx.call(gpxLayer);
-            gpx.dimensions(dMini);
+
 
             // redraw bounding box
             if (!panning) {
                 var getPath = d3.geo.path().projection(projection),
                     bbox = { type: 'Polygon', coordinates: [context.map().extent().polygon()] };
 
-                svg = selection.selectAll('.map-in-map-svg')
+                svg = wrap.selectAll('.map-in-map-svg')
                     .data([0]);
 
                 svg.enter()
@@ -236,31 +234,17 @@ iD.ui.MapInMap = function(context) {
         }
 
 
-        function hidden() {
-            return selection.style('display') === 'none';
-        }
-
-
         function toggle() {
             if (d3.event) d3.event.preventDefault();
 
+            hidden = !hidden;
+
             var label = d3.select('.minimap-toggle');
+            label.classed('active', !hidden)
+                .select('input').property('checked', !hidden);
 
-            if (hidden()) {
-                selection
-                    .style('display', 'block')
-                    .style('opacity', 0)
-                    .transition()
-                    .duration(200)
-                    .style('opacity', 1);
-
-                label.classed('active', true)
-                    .select('input').property('checked', true);
-
-                redraw();
-
-            } else {
-                selection
+            if (hidden) {
+                wrap
                     .style('display', 'block')
                     .style('opacity', 1)
                     .transition()
@@ -269,19 +253,29 @@ iD.ui.MapInMap = function(context) {
                     .each('end', function() {
                         d3.select(this).style('display', 'none');
                     });
+            } else {
+                wrap
+                    .style('display', 'block')
+                    .style('opacity', 0)
+                    .transition()
+                    .duration(200)
+                    .style('opacity', 1);
 
-                label.classed('active', false)
-                    .select('input').property('checked', false);
+                redraw();
             }
         }
 
         iD.ui.MapInMap.toggle = toggle;
 
-        selection
-            .on('mousedown.map-in-map', startMouse)
-            .on('mouseup.map-in-map', endMouse);
+        var wrap = selection.selectAll('.map-in-map')
+            .data([0]);
 
-        selection
+        wrap.enter()
+            .append('div')
+            .attr('class', 'map-in-map')
+            .style('display', (hidden ? 'none' : 'block'))
+            .on('mousedown.map-in-map', startMouse)
+            .on('mouseup.map-in-map', endMouse)
             .call(zoom)
             .on('dblclick.zoom', null);
 

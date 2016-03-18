@@ -40,11 +40,10 @@ iD.ui.RawTagEditor = function(context) {
         var $newTag = $wrap.selectAll('.add-tag')
             .data([0]);
 
-        var $enter = $newTag.enter().append('button')
-            .attr('class', 'add-tag');
-
-        $enter.append('span')
-            .attr('class', 'icon plus light');
+        $newTag.enter()
+            .append('button')
+            .attr('class', 'add-tag')
+            .call(iD.svg.Icon('#icon-plus', 'light'));
 
         $newTag.on('click', addTag);
 
@@ -53,7 +52,7 @@ iD.ui.RawTagEditor = function(context) {
 
         // Enter
 
-        $enter = $items.enter().append('li')
+        var $enter = $items.enter().append('li')
             .attr('class', 'tag-row cf');
 
         $enter.append('div')
@@ -73,8 +72,7 @@ iD.ui.RawTagEditor = function(context) {
         $enter.append('button')
             .attr('tabindex', -1)
             .attr('class', 'remove minor')
-            .append('span')
-            .attr('class', 'icon delete');
+            .call(iD.svg.Icon('#operation-delete'));
 
         if (context.taginfo()) {
             $enter.each(bindTypeahead);
@@ -85,7 +83,12 @@ iD.ui.RawTagEditor = function(context) {
         $items.order();
 
         $items.each(function(tag) {
-            var reference = iD.ui.TagReference({key: tag.key}, context);
+            var isRelation = (context.entity(id).type === 'relation'),
+                reference;
+            if (isRelation && tag.key === 'type')
+                reference = iD.ui.TagReference({rtype: tag.value}, context);
+            else
+                reference = iD.ui.TagReference({key: tag.key, value: tag.value}, context);
 
             if (state === 'hover') {
                 reference.showing(false);
@@ -111,6 +114,7 @@ iD.ui.RawTagEditor = function(context) {
             .on('click', removeTag);
 
         $items.exit()
+            .each(unbind)
             .remove();
 
         function pushMore() {
@@ -160,6 +164,16 @@ iD.ui.RawTagEditor = function(context) {
                         if (!err) callback(sort(value, data));
                     });
                 }));
+        }
+
+        function unbind() {
+            var row = d3.select(this);
+
+            row.selectAll('input.key')
+                .call(d3.combobox.off);
+
+            row.selectAll('input.value')
+                .call(d3.combobox.off);
         }
 
         function keyChange(d) {

@@ -46,11 +46,12 @@ iD.presets.Preset = function(id, preset, fields) {
     };
 
     preset.terms = function() {
-        return preset.t('terms', {'default': ''}).split(',');
+        return preset.t('terms', {'default': ''}).toLowerCase().trim().split(/\s*,+\s*/);
     };
 
     preset.isFallback = function() {
-        return Object.keys(preset.tags).length === 0;
+        var tagCount = Object.keys(preset.tags).length;
+        return tagCount === 0 || (tagCount === 1 && preset.tags.hasOwnProperty('area'));
     };
 
     preset.reference = function(geometry) {
@@ -72,7 +73,7 @@ iD.presets.Preset = function(id, preset, fields) {
 
         for (var f in preset.fields) {
             var field = preset.fields[f];
-            if (field.matchGeometry(geometry) && field['default'] === tags[field.key]) {
+            if (field.matchGeometry(geometry) && field.default === tags[field.key]) {
                 delete tags[field.key];
             }
         }
@@ -116,8 +117,8 @@ iD.presets.Preset = function(id, preset, fields) {
 
         for (var f in preset.fields) {
             var field = preset.fields[f];
-            if (field.matchGeometry(geometry) && field.key && !tags[field.key] && field['default']) {
-                tags[field.key] = field['default'];
+            if (field.matchGeometry(geometry) && field.key && !tags[field.key] && field.default) {
+                tags[field.key] = field.default;
             }
         }
 
