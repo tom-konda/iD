@@ -54,6 +54,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Better handling of rate limited API calls and other API errors ([#10299])
 * Fix info boxes for descriptions of brands referenced by [NSI](https://github.com/osmlab/name-suggestion-index) presets ([#10885])
 * Make features clickable when "Full Fill" rendering style is selected
+* Fix calculation of access field placeholders for multi selections ([#9333])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
