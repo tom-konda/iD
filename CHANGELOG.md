@@ -42,6 +42,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Also show search result for coordinates in `lon/lat` order in search results ([#10720], thanks [@Deeptanshu-sankhwar])
 * Linkify keys & tags in the preset docs from the wiki ([#10763], thanks [@k-yle])
 * Allow broken (unclosed) areas to be continued ([#9635], thanks [@k-yle])
+* Render `*_link` roads narrower than their "regular" counterpart ([#10722])
 #### :scissors: Operations
 * Fix splitting of closed ways (or areas) when two or more split-points are selected
 #### :camera: Street-Level
@@ -57,6 +58,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix too dim markers of selected/hovered photo of some street level imagery layers ([#10755], thanks [@draunger])
 * Fix `+` symbol appearing in changeset comments from external tools ([#10766], thanks [@k-yle])
 #### :earth_asia: Localization
+* Add `housename` to address format in Bolivia ([#10727])
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
 #### :rocket: Presets
@@ -67,6 +69,8 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10003]: https://github.com/openstreetmap/iD/pull/10003
 [#10648]: https://github.com/openstreetmap/iD/pull/10648
 [#10720]: https://github.com/openstreetmap/iD/issues/10720
+[#10722]: https://github.com/openstreetmap/iD/pull/10722
+[#10727]: https://github.com/openstreetmap/iD/issues/10727
 [#10747]: https://github.com/openstreetmap/iD/issues/10747
 [#10748]: https://github.com/openstreetmap/iD/issues/10748
 [#10755]: https://github.com/openstreetmap/iD/issues/10755
@@ -118,7 +122,6 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Add Ladin (language code `lld`) as an available option for multilingual names
 * Add 30 indigenous languages as dropdown options for multilingual names ([#10684], thanks [@k-yle])
 * Add `lang`uage attributes to input fields for multilingual names, as well as wikidata and wikipedia fields ([#10716], thanks [@mapmeld])
-* Add `housename` to address format in Bolivia ([#10727])
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
 * Fix walkthrough from showing tooltips on wrong location under certain circumstances ([#10650], [#10624], [#10634])
@@ -153,7 +156,6 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10683]: https://github.com/openstreetmap/iD/issues/10683
 [#10684]: https://github.com/openstreetmap/iD/pull/10684
 [#10716]: https://github.com/openstreetmap/iD/pull/10716
-[#10727]: https://github.com/openstreetmap/iD/issues/10727
 [@winstonsung]: https://github.com/winstonsung/
 [@Nekzuris]: https://github.com/Nekzuris
 [@michaelabon]: https://github.com/michaelabon
