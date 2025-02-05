@@ -64,10 +64,12 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :mortar_board: Walkthrough / Help
 * Fix walkthrough from showing tooltips on wrong location under certain circumstances ([#10650], [#10624], [#10634])
 #### :rocket: Presets
+* Updated the [`cycleway`](https://osm.wiki/Key:cycleway) & [`sidewalk`](https://osm.wiki/Key:sidewalk) fields to recognise the `:both` suffix, for example [`cycleway:both`](https://osm.wiki/Key:cycleway:both) ([#9587], thanks [@k-yle])
 #### :hammer: Development
 * Migrate unit tests from karma to vitest ([#10452])
 
 [#9013]: https://github.com/openstreetmap/iD/issues/9013
+[#9587]: https://github.com/openstreetmap/iD/issues/9587
 [#9816]: https://github.com/openstreetmap/iD/issues/9816
 [#9999]: https://github.com/openstreetmap/iD/issues/9999
 [#10452]: https://github.com/openstreetmap/iD/pull/10452
