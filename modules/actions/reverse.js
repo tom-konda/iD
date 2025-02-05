@@ -22,6 +22,10 @@ export function actionReverse(entityID, options) {
     var numeric = /^([+\-]?)(?=[\d.])/;
     var directionKey = /direction$/;
     var turn_lanes = /^turn:lanes:?/;
+    const keysToKeepUnchanged = [
+        // https://github.com/openstreetmap/iD/issues/10736
+        /^red_turn:(right|left)/
+    ];
     var keyReplacements = [
         [/:right$/, ':left'],
         [/:left$/, ':right'],
@@ -82,6 +86,9 @@ export function actionReverse(entityID, options) {
 
 
     function reverseKey(key) {
+        if (keysToKeepUnchanged.some(keyRegex => keyRegex.test(key))) {
+            return key;
+        }
         for (var i = 0; i < keyReplacements.length; ++i) {
             var replacement = keyReplacements[i];
             if (replacement[0].test(key)) {
