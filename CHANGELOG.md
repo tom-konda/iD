@@ -35,7 +35,8 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [@xxxx]: https://github.com/xxxx
 -->
 
-# Unreleased (2.31.0-dev)
+# 2.31.0
+##### 2025-Feb-05
 
 #### :sparkles: Usability & Accessibility
 * Fix flickering when switching between background imagery layers, make switching backgrounds snappier
@@ -47,7 +48,6 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :scissors: Operations
 * When extracting a node from a way (shortcut: <kbd>E</kbd>), the relations are now preserved by default. Extracting a node without its relations is still possible using <kbd>⇧ Shift</kbd> <kbd>E</kbd> ([#9816], thanks [@k-yle])
 * Remove rarely-used keyboard shortcut <kbd>L</kbd> to prevent accidental activation of the geolocate tool ([#9999], thanks [@k-yle])
-#### :camera: Street-Level
 #### :white_check_mark: Validation
 * Include wikidata errors from osmose QA service ([#9998], thanks [@k-yle])
 #### :bug: Bugfixes
@@ -67,7 +67,6 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Add Ladin (language code `lld`) as an available option for multilingual names
 * Add 30 indigenous languages as dropdown options for multilingual names ([#10684], thanks [@k-yle])
 * Add `lang`uage attributes to input fields for multilingual names, as well as wikidata and wikipedia fields ([#10716], thanks [@mapmeld])
-#### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
 * Fix walkthrough from showing tooltips on wrong location under certain circumstances ([#10650], [#10624], [#10634])
 #### :rocket: Presets
