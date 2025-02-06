@@ -53,6 +53,14 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10003]: https://github.com/openstreetmap/iD/pull/10003
 
 
+# 2.31.1
+##### 2025-Feb-06
+
+* Fix flickering when switching background layers or zooming ([#10738])
+
+[#10738]: https://github.com/openstreetmap/iD/issues/10738
+
+
 # 2.31.0
 ##### 2025-Feb-05
 
