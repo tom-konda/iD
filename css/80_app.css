@@ -4449,6 +4449,15 @@ img.tile-debug {
     bottom: 0;
 }
 
+.layer-background {
+    z-index: 1;
+}
+.layer-overlay {
+    z-index: 2;
+}
+.layer-data {
+    z-index: 3;
+}
 
 /* Map-In-Map
 ------------------------------------------------------- */
