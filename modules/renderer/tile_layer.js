@@ -79,6 +79,7 @@ export function rendererTileLayer(context) {
     function addSource(d) {
         d.url = _source.url(d);
         d.tileSize = _tileSize;
+        d.source = _source;
         return d;
     }
 
@@ -97,18 +98,17 @@ export function rendererTileLayer(context) {
             pixelOffset = [0, 0];
         }
 
-        var translate = [
-            _projection.translate()[0] + pixelOffset[0],
-            _projection.translate()[1] + pixelOffset[1]
-        ];
 
         tiler
             .scale(_projection.scale() * 2 * Math.PI)
-            .translate(translate);
+            .translate([
+                _projection.translate()[0] + pixelOffset[0],
+                _projection.translate()[1] + pixelOffset[1]
+            ]);
 
         _tileOrigin = [
-            _projection.scale() * Math.PI - translate[0],
-            _projection.scale() * Math.PI - translate[1]
+            _projection.scale() * Math.PI - _projection.translate()[0],
+            _projection.scale() * Math.PI - _projection.translate()[1]
         ];
 
         render(selection);
@@ -163,9 +163,9 @@ export function rendererTileLayer(context) {
             var ts = d.tileSize * Math.pow(2, _zoom - d[2]);
             var scale = tileSizeAtZoom(d, _zoom);
             return 'translate(' +
-                ((d[0] * ts) * _tileSize / d.tileSize - _tileOrigin[0]
+                ((d[0] * ts + d.source.offset()[0] * Math.pow(2, _zoom)) * _tileSize / d.tileSize - _tileOrigin[0]
             ) + 'px,' +
-                ((d[1] * ts) * _tileSize / d.tileSize - _tileOrigin[1]
+                ((d[1] * ts + d.source.offset()[1] * Math.pow(2, _zoom)) * _tileSize / d.tileSize - _tileOrigin[1]
             ) + 'px) ' +
                 'scale(' + scale * _tileSize / d.tileSize + ',' + scale * _tileSize / d.tileSize + ')';
         }

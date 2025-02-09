@@ -44,7 +44,8 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Add warning if aeroways cross each other, buildings or highways ([#9315], thanks [@k-yle])
 #### :bug: Bugfixes
 * Prevent degenerate ways caused by deleting a corner of a triangle ([#10003], thanks [@k-yle])
-* Fix briefly disappearing data layer during background layer tile switching transition ([#10748])
+* Fix briefly disappearing data layer during background layer tile layer switching transition ([#10748])
+* Preserve imagery offset during tile layer switching transition ([#10748])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
@@ -52,6 +53,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :hammer: Development
 
 [#10003]: https://github.com/openstreetmap/iD/pull/10003
+[#10748]: https://github.com/openstreetmap/iD/issues/10748
 
 
 # 2.31.1
