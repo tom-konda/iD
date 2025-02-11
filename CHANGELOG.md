@@ -48,6 +48,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix briefly disappearing data layer during background layer tile layer switching transition ([#10748])
 * Preserve imagery offset during tile layer switching transition ([#10748])
 * Fix over-saturated map tiles near the border of the tile service's coverage area ([#10747], thanks [@hlfan])
+* Fix too dim markers of selected/hovered photo of some street level imagery layers ([#10755], thanks [@draunger])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
@@ -58,8 +59,10 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10720]: https://github.com/openstreetmap/iD/issues/10720
 [#10747]: https://github.com/openstreetmap/iD/issues/10747
 [#10748]: https://github.com/openstreetmap/iD/issues/10748
+[#10755]: https://github.com/openstreetmap/iD/issues/10755
 [@hlfan]: https://github.com/hlfan
 [@Deeptanshu-sankhwar]: https://github.com/Deeptanshu-sankhwar
+[@draunger]: https://github.com/draunger
 
 
 # 2.31.1
