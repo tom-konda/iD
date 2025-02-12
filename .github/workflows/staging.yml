@@ -17,7 +17,7 @@ jobs:
       - name: Check whether required secret is available
         id: checksecret_job
         env:
-            MY_SECRET: ${{secrets.NETLIFY_AUTH_TOKEN}}
+            NETLIFY_AUTH_TOKEN: ${{secrets.NETLIFY_AUTH_TOKEN}}
         run: |
             echo "::set-output name=deploy_secret_present::${{ env.NETLIFY_AUTH_TOKEN != '' }}"
 
