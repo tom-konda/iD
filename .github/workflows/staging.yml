@@ -10,6 +10,7 @@ permissions:
 jobs:
   checksecret:
     name: check if deploy secret is present
+    environment: workflows
     runs-on: ubuntu-latest
     outputs:
       deploy_secret_present: ${{ steps.checksecret_job.outputs.deploy_secret_present }}
@@ -25,6 +26,7 @@ jobs:
     needs: [checksecret]
     if: needs.checksecret.outputs.deploy_secret_present == 'true'
     runs-on: ubuntu-latest
+    environment: workflows
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
