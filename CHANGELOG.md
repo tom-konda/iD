@@ -63,6 +63,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Add `housename` to address format in Bolivia ([#10727])
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
+* Fix walkthrough from not correctly registering deleted ways in "Lines" step ([#10776]) 
 #### :rocket: Presets
 #### :hammer: Development
 
@@ -81,6 +82,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10763]: https://github.com/openstreetmap/iD/pull/10763
 [#10764]: https://github.com/openstreetmap/iD/issues/10764
 [#10766]: https://github.com/openstreetmap/iD/pull/10766
+[#10776]: https://github.com/openstreetmap/iD/issues/10776
 [@hlfan]: https://github.com/hlfan
 [@Deeptanshu-sankhwar]: https://github.com/Deeptanshu-sankhwar
 [@draunger]: https://github.com/draunger
