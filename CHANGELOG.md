@@ -67,12 +67,14 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix walkthrough from not correctly registering deleted ways in "Lines" step ([#10776]) 
 #### :rocket: Presets
 #### :hammer: Development
+* enable Intellisense (IDE auto-completion) for the main classes ([#10618], thanks [@k-yle])
 
 [#7381]: https://github.com/openstreetmap/iD/issues/7381
 [#8911]: https://github.com/openstreetmap/iD/pull/8911
 [#9634]: https://github.com/openstreetmap/iD/pull/9634
 [#9635]: https://github.com/openstreetmap/iD/pull/9635
 [#10003]: https://github.com/openstreetmap/iD/pull/10003
+[#10618]: https://github.com/openstreetmap/iD/pull/10618
 [#10648]: https://github.com/openstreetmap/iD/pull/10648
 [#10720]: https://github.com/openstreetmap/iD/issues/10720
 [#10722]: https://github.com/openstreetmap/iD/pull/10722
