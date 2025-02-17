@@ -43,7 +43,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Linkify keys & tags in the preset docs from the wiki ([#10763], thanks [@k-yle])
 * Allow broken (unclosed) areas to be continued ([#9635], thanks [@k-yle])
 * Render `*_link` roads narrower than their "regular" counterpart ([#10722])
-* remove `noexit=yes` and `fixme=continue` when you continue a line ([#9634], thanks [@k-yle])
+* Remove `noexit=yes` and `fixme=continue` when you continue a line ([#9634], thanks [@k-yle])
 #### :scissors: Operations
 * Fix splitting of closed ways (or areas) when two or more split-points are selected
 * Keep `red_turn:left/right` tags unchanged when reversing a way ([#10737], thanks [@burrscurr])
@@ -61,6 +61,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix over-saturated map tiles near the border of the tile service's coverage area ([#10747], thanks [@hlfan])
 * Fix too dim markers of selected/hovered photo of some street level imagery layers ([#10755], thanks [@draunger])
 * Fix `+` symbol appearing in changeset comments from external tools ([#10766], thanks [@k-yle])
+* Fix `destination_sign` relations from being corrupted when splitting a way ([#10646], thanks [@k-yle])
 #### :earth_asia: Localization
 * Add `housename` to address format in Bolivia ([#10727])
 #### :hourglass: Performance
@@ -68,7 +69,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix walkthrough from not correctly registering deleted ways in "Lines" step ([#10776]) 
 #### :rocket: Presets
 #### :hammer: Development
-* enable Intellisense (IDE auto-completion) for the main classes ([#10618], thanks [@k-yle])
+* Enable Intellisense (IDE auto-completion) for the main classes ([#10618], thanks [@k-yle])
 
 [#7381]: https://github.com/openstreetmap/iD/issues/7381
 [#8911]: https://github.com/openstreetmap/iD/pull/8911
@@ -77,6 +78,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#9635]: https://github.com/openstreetmap/iD/pull/9635
 [#10003]: https://github.com/openstreetmap/iD/pull/10003
 [#10618]: https://github.com/openstreetmap/iD/pull/10618
+[#10646]: https://github.com/openstreetmap/iD/pull/10646
 [#10648]: https://github.com/openstreetmap/iD/pull/10648
 [#10720]: https://github.com/openstreetmap/iD/issues/10720
 [#10722]: https://github.com/openstreetmap/iD/pull/10722
