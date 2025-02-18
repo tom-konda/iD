@@ -4,7 +4,7 @@ import { prefs } from './preferences';
 import { coreDifference } from './difference';
 import { geoExtent } from '../geo/extent';
 import { modeSelect } from '../modes/select';
-import { utilArrayChunk, utilArrayGroupBy, utilEntityAndDeepMemberIDs, utilRebind } from '../util';
+import { utilArrayChunk, utilArrayDifference, utilArrayGroupBy, utilArrayIntersection, utilArrayUnion, utilEntityAndDeepMemberIDs, utilRebind } from '../util';
 import * as Validations from '../validations/index';
 
 
@@ -503,8 +503,8 @@ export function coreValidator(context) {
       return Promise.resolve();
     }
 
-    // Re-validate also connected (or previously connected) entities to the current way
-    // fix #8758
+    // revalidate also connected (or previously connected) entities to the current way
+    // https://github.com/openstreetmap/iD/issues/8758
     const addConnectedWays = graph => diff
       .filter(entityID => graph.hasEntity(entityID))
       .map(entityID    => graph.entity(entityID))
@@ -513,6 +513,22 @@ export function coreValidator(context) {
       .forEach(way => entityIDs.add(way.id));
     addConnectedWays(currGraph);
     addConnectedWays(prevGraph);
+
+    // revalidate entities with changed relation memberships
+    // https://github.com/openstreetmap/iD/issues/10786
+    Object.values({...incrementalDiff.created(), ...incrementalDiff.deleted()})
+      .filter(e => e.type === 'relation')
+      .flatMap(r => r.members)
+      .forEach(m => entityIDs.add(m.id));
+    Object.values(incrementalDiff.modified())
+      .filter(e => e.type === 'relation')
+      .map(r => ({ baseEntity: prevGraph.entity(r.id), headEntity: r }))
+      .forEach(({ baseEntity, headEntity }) => {
+        const bm = baseEntity.members.map(m => m.id);
+        const hm = headEntity.members.map(m => m.id);
+        const symDiff = utilArrayDifference(utilArrayUnion(bm, hm), utilArrayIntersection(bm, hm));
+        symDiff.forEach(id => entityIDs.add(id));
+      });
 
     _headPromise = validateEntitiesAsync(entityIDs, _headCache)
       .then(() => updateResolvedIssues(entityIDs))
