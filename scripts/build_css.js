@@ -35,7 +35,7 @@ function buildCSS() {
         const css = fs.readFileSync('dist/iD.css', 'utf8');
         return postcss([
             autoprefixer,
-            prepend({ prefix: '.ideditor' })
+            prepend({ prefix: '.ideditor', exclude: [ /^\.ideditor(\[.*?\])*/ ] })
           ])
           .process(css, { from: 'dist/iD.css', to: 'dist/iD.css' });
       })
