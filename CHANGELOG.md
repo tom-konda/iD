@@ -67,6 +67,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix too dim markers of selected/hovered photo of some street level imagery layers ([#10755], thanks [@draunger])
 * Fix `+` symbol appearing in changeset comments from external tools ([#10766], thanks [@k-yle])
 * Fix `destination_sign` relations from being corrupted when splitting a way ([#10646], thanks [@k-yle])
+* Fix combobox dropdown menu sticking around under certain conditions (e.g. while editing the role of a relation member and deselecting a feature #10319)
 #### :earth_asia: Localization
 * Add `housename` to address format in Bolivia ([#10727])
 #### :hourglass: Performance
