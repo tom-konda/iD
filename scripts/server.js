@@ -12,7 +12,14 @@ gaze(['css/**/*.css'], (err, watcher) => {
 
 const server = http.createServer((request, response) => {
   return serve(request, response, {
-    symlinks: true
+    symlinks: true,
+    headers: [{
+      source: '**',
+      headers: [{
+        key : 'Cache-Control',
+        value : 'no-cache'
+      }]
+    }]
   });
 });
 
