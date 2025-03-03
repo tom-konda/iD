@@ -86,7 +86,7 @@ different `loc` coordinate. More generically, `iD.osmEntity#update` returns
 a new entity of the same type and `id` as the original but with specified properties
 such as `nodes`, `tags`, or `members` replaced.
 
-![](https://farm9.staticflickr.com/8087/8508309757_ccf5b6f09b_o.png)
+![](docs/img/graph-history.png)
 
 Entities are related to one another: ways have many nodes and relations have
 many members.
