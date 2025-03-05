@@ -35,6 +35,19 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [@xxxx]: https://github.com/xxxx
 -->
 
+# unreleased (v2.33.0-dev)
+
+#### :sparkles: Usability & Accessibility
+#### :scissors: Operations
+#### :camera: Street-Level
+#### :white_check_mark: Validation
+#### :bug: Bugfixes
+#### :earth_asia: Localization
+#### :hourglass: Performance
+#### :mortar_board: Walkthrough / Help
+#### :hammer: Development
+
+
 # 2.32.0
 ##### 2025-03-05
 
@@ -74,10 +87,8 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix combobox dropdown menu sticking around under certain conditions (e.g. while editing the role of a relation member and deselecting a feature #10319)
 #### :earth_asia: Localization
 * Add `housename` to address format in Bolivia ([#10727])
-#### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
 * Fix walkthrough from not correctly registering deleted ways in "Lines" step ([#10776])
-#### :rocket: Presets
 #### :hammer: Development
 * Enable Intellisense (IDE auto-completion) for the main classes ([#10618], thanks [@k-yle])
 
