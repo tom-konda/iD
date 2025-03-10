@@ -13,6 +13,9 @@ gaze(['css/**/*.css'], (err, watcher) => {
 const server = http.createServer((request, response) => {
   return serve(request, response, {
     cleanUrls: false,
+    rewrites: [
+      { source: '/', destination: '/index.html' },
+    ],
     symlinks: true,
     headers: [{
       source: '**',
