@@ -645,6 +645,8 @@ export default {
 
             if (callback) {
                 if (err) {
+                    // eslint-disable-next-line no-console
+                    console.error('API error:', err);
                     return callback(err);
                 } else {
                     if (path.indexOf('.json') !== -1) {
