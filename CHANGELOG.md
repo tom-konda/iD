@@ -43,12 +43,15 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :white_check_mark: Validation
 #### :bug: Bugfixes
 * fix some direction cones not appearing on railway tracks ([#10843], thanks [@k-yle])
+* better handling of rate limited API calls and other API errors ([#10299])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
 #### :hammer: Development
 
+[#10299]: https://github.com/openstreetmap/iD/issues/10299
 [#10843]: https://github.com/openstreetmap/iD/pull/10843
+
 
 # 2.32.0
 ##### 2025-03-05
