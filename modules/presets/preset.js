@@ -296,7 +296,7 @@ export function presetPreset(presetID, preset, addable, allFields, allPresets) {
     fieldIDs.forEach(fieldID => {
       const match = fieldID.match(referenceRegex);
       if (match !== null) {    // a presetID wrapped in braces {}
-        resolved = resolved.concat(inheritFields(allPresets[match[1]], which));
+        resolved = resolved.concat(inheritFields(allPresets[match[1]], which, loc));
       } else if (allFields[fieldID]) {    // a normal fieldID
         resolved.push(allFields[fieldID]);
       } else {
@@ -321,21 +321,26 @@ export function presetPreset(presetID, preset, addable, allFields, allPresets) {
             })];
           }
         }
-        resolved = inheritFields(parent, which);
+        resolved = inheritFields(parent, which, loc);
       }
+    }
+
+    if (loc) {
+      const validHere = locationManager.locationSetsAt(loc);
+      resolved = resolved.filter(field => !field.locationSetID || validHere[field.locationSetID]);
     }
 
     return resolved;
 
 
     // returns an array of fields to inherit from the given presetID, if found
-    function inheritFields(parent, which) {
+    function inheritFields(parent, which, loc) {
       if (!parent) return [];
 
       if (which === 'fields') {
-        return parent.fields().filter(shouldInherit);
+        return parent.fields(loc).filter(shouldInherit);
       } else if (which === 'moreFields') {
-        return parent.moreFields().filter(shouldInherit);
+        return parent.moreFields(loc).filter(shouldInherit);
       } else {
         return [];
       }

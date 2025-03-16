@@ -51,6 +51,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :mortar_board: Walkthrough / Help
 #### :rocket: Presets
 * Don't inherit fields which the current preset already has a dedicated field for
+* Take location into account when setting a presets default values from regional fields
 #### :hammer: Development
 
 [#10805]: https://github.com/openstreetmap/iD/pull/10805
