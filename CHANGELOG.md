@@ -49,6 +49,8 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
+#### :rocket: Presets
+* Don't inherit fields which the current preset already has a dedicated field for
 #### :hammer: Development
 
 [#10805]: https://github.com/openstreetmap/iD/pull/10805

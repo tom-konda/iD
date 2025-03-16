@@ -325,7 +325,7 @@ export function presetPreset(presetID, preset, addable, allFields, allPresets) {
       }
     }
 
-    return utilArrayUniq(resolved);
+    return resolved;
 
 
     // returns an array of fields to inherit from the given presetID, if found
@@ -335,7 +335,7 @@ export function presetPreset(presetID, preset, addable, allFields, allPresets) {
       if (which === 'fields') {
         return parent.fields().filter(shouldInherit);
       } else if (which === 'moreFields') {
-        return parent.moreFields();
+        return parent.moreFields().filter(shouldInherit);
       } else {
         return [];
       }
@@ -349,6 +349,11 @@ export function presetPreset(presetID, preset, addable, allFields, allPresets) {
         // inherit anyway if multiple values are allowed or just a checkbox
         f.type !== 'multiCombo' && f.type !== 'semiCombo' && f.type !== 'manyCombo' && f.type !== 'check'
       ) return false;
+      if (f.key && (_this.originalFields.some(originalField => f.key === allFields[originalField]?.key)
+             || _this.originalMoreFields.some(originalField => f.key === allFields[originalField]?.key))) {
+        // current preset already has a field for this field
+        return false;
+      }
 
       return true;
     }
