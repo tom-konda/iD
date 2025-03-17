@@ -43,6 +43,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :camera: Street-Level
 * Add prev/next button to viewer for local georeferenced photos ([#10852], thanks [@0xatulpatil])
 #### :white_check_mark: Validation
+* The Suspicious Names validator warning now also compares the Name field to the preset’s aliases (in addition to the preset’s name) in the user’s language
 #### :bug: Bugfixes
 * Fix some direction cones not appearing on railway tracks ([#10843], thanks [@k-yle])
 * Better handling of rate limited API calls and other API errors ([#10299])
