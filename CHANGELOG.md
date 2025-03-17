@@ -46,6 +46,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :bug: Bugfixes
 * Fix some direction cones not appearing on railway tracks ([#10843], thanks [@k-yle])
 * Better handling of rate limited API calls and other API errors ([#10299])
+* Fix info boxes for descriptions of brands referenced by [NSI](https://github.com/osmlab/name-suggestion-index) presets ([#10885])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
@@ -58,6 +59,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10299]: https://github.com/openstreetmap/iD/issues/10299
 [#10843]: https://github.com/openstreetmap/iD/pull/10843
 [#10852]: https://github.com/openstreetmap/iD/issues/10852
+[#10885]: https://github.com/openstreetmap/iD/issues/10885
 [@0xatulpatil]: https://github.com/0xatulpatil
 
 
