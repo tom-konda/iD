@@ -142,7 +142,10 @@ export function presetPreset(presetID, preset, addable, allFields, allPresets) {
 
   _this.aliases = () => {
     return resolveReference('originalName')
-      .t('aliases', { 'default': _this.originalAliases }).trim().split(/\s*[\r\n]+\s*/);
+      .t('aliases', { 'default': _this.originalAliases })
+      .trim()
+      .split(/\s*[\r\n]+\s*/)
+      .filter(Boolean);
   };
 
   _this.terms = () => {
