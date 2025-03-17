@@ -11,6 +11,10 @@ export function validationSuspiciousName(context) {
     'aerialway', 'aeroway', 'amenity', 'building', 'craft', 'highway',
     'leisure', 'railway', 'man_made', 'office', 'shop', 'tourism', 'waterway'
   ];
+  const ignoredPresets = new Set([
+    'amenity/place_of_worship/christian/jehovahs_witness',
+    '__test__ignored_preset' // for unit tests
+  ]);
   let _waitingForNsi = false;
 
 
@@ -48,6 +52,7 @@ export function validationSuspiciousName(context) {
   /** @param {string} name */
   function nameMatchesPresetName(name, preset) {
     if (!preset) return false;
+    if (ignoredPresets.has(preset.id)) return false;
 
     name = name.toLowerCase();
     return name === preset.name().toLowerCase() || preset.aliases().some(alias => name === alias.toLowerCase());

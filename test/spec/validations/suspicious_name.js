@@ -1,5 +1,3 @@
-import { setTimeout } from 'node:timers/promises';
-
 describe('iD.validations.suspicious_name', function () {
     var context;
 
@@ -34,8 +32,9 @@ describe('iD.validations.suspicious_name', function () {
           genericWords: ['^stores?$']
         };
         iD.fileFetcher.cache().preset_presets = {
-            'Velero': { tags: { craft: 'sailmaker' }, aliases: ['Velaio'], geometry: ['line'] },
-            'Constructor de barco': { tags: { craft: 'boatbuilder' }, geometry: ['line'] },
+            'preset1': { tags: { craft: 'sailmaker' }, geometry: ['line'], name: 'Velero', aliases: ['Velaio'] },
+            'preset2': { tags: { craft: 'boatbuilder' }, geometry: ['line'], name: 'Constructor de barco' },
+            '__test__ignored_preset': { tags: { foo: 'bar' }, geometry: ['line'], name: 'Foo Bar' },
         };
     });
 
@@ -204,5 +203,14 @@ describe('iD.validations.suspicious_name', function () {
 
         expect(issues[1].type).to.eql('suspicious_name');
         expect(issues[1].hash).to.eql('name=cOnStRuCtOr de barco');
+    });
+
+    it('ignores feature with a name that matches an ignored preset\'s name', async () => {
+        await iD.presetManager.ensureLoaded(true);
+        createWay({ foo: 'bar', name: 'Foo Bar' });
+        const validator = iD.validationSuspiciousName(context);
+
+        const issues = validate(validator);
+        expect(issues).to.have.lengthOf(0);
     });
 });
