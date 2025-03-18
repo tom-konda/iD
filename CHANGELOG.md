@@ -40,6 +40,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :sparkles: Usability & Accessibility
 * Allow searching for coordinates in localized number format in search box ([#10805])
 #### :scissors: Operations
+* Fix unexpected behavior of squaring operation on individual vertices ([#10401])
 #### :camera: Street-Level
 * Add prev/next button to viewer for local georeferenced photos ([#10852], thanks [@0xatulpatil])
 #### :white_check_mark: Validation
@@ -58,6 +59,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 
 [#10805]: https://github.com/openstreetmap/iD/pull/10805
 [#10299]: https://github.com/openstreetmap/iD/issues/10299
+[#10401]: https://github.com/openstreetmap/iD/issues/10401
 [#10843]: https://github.com/openstreetmap/iD/pull/10843
 [#10852]: https://github.com/openstreetmap/iD/issues/10852
 [#10885]: https://github.com/openstreetmap/iD/issues/10885
