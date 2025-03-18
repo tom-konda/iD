@@ -42,6 +42,9 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :scissors: Operations
 * Fix unexpected behavior of squaring operation on individual vertices ([#10401])
 #### :camera: Street-Level
+* Replace date filter input boxes with a slider to select photos by freshness ([#10394], thanks [@mattiapezzotti])
+* Preserve relative viewing direction when switching between 360° panoramas in Panoramax([#10392], thanks [@mattiapezzotti])
+* Add keyboard shortcut `Shift + P` to toggle active street level photo layers ([#10394], thanks [@mattiapezzotti]))
 * Add prev/next button to viewer for local georeferenced photos ([#10852], thanks [@0xatulpatil])
 #### :white_check_mark: Validation
 * The Suspicious Names validator warning now also compares the Name field to the preset’s aliases (in addition to the preset’s name) in the user’s language
@@ -58,13 +61,16 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Take location into account when setting a presets default values from regional fields
 #### :hammer: Development
 
-[#10805]: https://github.com/openstreetmap/iD/pull/10805
 [#10299]: https://github.com/openstreetmap/iD/issues/10299
+[#10392]: https://github.com/openstreetmap/iD/issues/10392
+[#10394]: https://github.com/openstreetmap/iD/pull/10394
 [#10401]: https://github.com/openstreetmap/iD/issues/10401
+[#10805]: https://github.com/openstreetmap/iD/pull/10805
 [#10843]: https://github.com/openstreetmap/iD/pull/10843
 [#10852]: https://github.com/openstreetmap/iD/issues/10852
 [#10885]: https://github.com/openstreetmap/iD/issues/10885
 [@0xatulpatil]: https://github.com/0xatulpatil
+
 
 
 # 2.32.0
