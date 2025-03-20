@@ -61,8 +61,10 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :rocket: Presets
 * Don't inherit fields which the current preset already has a dedicated field for
 * Take location into account when setting a presets default values from regional fields
+* Roads with `motorroad=yes` show implied access restrictions (`foot=no`, `bicycle=no`, `horse=no`) ([id-tagging-schema#609], [#9333])
 #### :hammer: Development
 
+[#9333]: https://github.com/openstreetmap/iD/pull/9333
 [#10299]: https://github.com/openstreetmap/iD/issues/10299
 [#10392]: https://github.com/openstreetmap/iD/issues/10392
 [#10394]: https://github.com/openstreetmap/iD/pull/10394
@@ -71,6 +73,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10843]: https://github.com/openstreetmap/iD/pull/10843
 [#10852]: https://github.com/openstreetmap/iD/issues/10852
 [#10885]: https://github.com/openstreetmap/iD/issues/10885
+[id-tagging-schema#609]: https://github.com/openstreetmap/id-tagging-schema/issues/609
 [@0xatulpatil]: https://github.com/0xatulpatil
 [@MohamedAli00949]: https://github.com/MohamedAli00949
 
