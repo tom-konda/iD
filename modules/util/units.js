@@ -239,7 +239,7 @@ export function dmsMatcher(q, _localeCode = undefined) {
             parser: localizedNumberCoordsParser
         }
     ];
-    function localizedNumberCoordsParser(q, ) {
+    function localizedNumberCoordsParser(q) {
         const parseLocaleFloat = localizer.floatParser(_localeCode || localizer.localeCode());
         let parts = q.split(/,?\s+|\s*[\/\\]\s*/);
         if (parts.length !== 2) return false;

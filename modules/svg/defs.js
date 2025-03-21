@@ -28,7 +28,7 @@ export function svgDefs(context) {
         // positioning for different tags)
 
         /** @param {string} name @param {string} colour */
-        function addOnewayMarker(name, colour, opacity) {
+        function addOnewayMarker(name, colour) {
             _defsSelection
                 .append('marker')
                 .attr('id', `ideditor-oneway-marker-${name}`)
