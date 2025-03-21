@@ -117,15 +117,15 @@ export function uiFeatureList(context) {
 
 
         function features() {
-            var result = [];
             var graph = context.graph();
             var visibleCenter = context.map().extent().center();
             var q = search.property('value').toLowerCase().trim();
 
-            if (!q) return result;
+            if (!q) return [];
 
-            var locationMatch = sexagesimal.pair(q.toUpperCase()) || dmsMatcher(q);
+            const locationMatch = sexagesimal.pair(q.toUpperCase()) || dmsMatcher(q);
 
+            const coordResult = [];
             if (locationMatch) {
                 const latLon = [Number(locationMatch[0]), Number(locationMatch[1])];
                 const lonLat = [latLon[1], latLon[0]];  // also try swapped order
@@ -137,7 +137,7 @@ export function uiFeatureList(context) {
                 isLonLatValid &&= lonLat[0] !== lonLat[1]; // don't flip when lat=lon
 
                 if (isLatLonValid) {
-                    result.push({
+                    coordResult.push({
                         id: latLon[0] + '/' + latLon[1],
                         geometry: 'point',
                         type: t('inspector.location'),
@@ -147,7 +147,7 @@ export function uiFeatureList(context) {
                     });
                 }
                 if (isLonLatValid) {
-                    result.push({
+                    coordResult.push({
                         id: lonLat[0] + '/' + lonLat[1],
                         geometry: 'point',
                         type: t('inspector.location'),
@@ -158,12 +158,13 @@ export function uiFeatureList(context) {
             }
 
             // A location search takes priority over an ID search
-            var idMatch = !locationMatch && q.match(/(?:^|\W)(node|way|relation|note|[nwr])\W{0,2}0*([1-9]\d*)(?:\W|$)/i);
+            const idMatch = !locationMatch && q.match(/(?:^|\W)(node|way|relation|note|[nwr])\W{0,2}0*([1-9]\d*)(?:\W|$)/i);
 
+            const idResult = [];
             if (idMatch) {
                 var elemType = idMatch[1] === 'note' ? idMatch[1] : idMatch[1].charAt(0);
                 var elemId = idMatch[2];
-                result.push({
+                idResult.push({
                     id: elemType + elemId,
                     geometry: elemType === 'n' ? 'point' : elemType === 'w' ? 'line' : elemType === 'note' ? 'note' : 'relation',
                     type: elemType === 'n' ? t('inspector.node') : elemType === 'w' ? t('inspector.way') : elemType === 'note' ? t('note.note') : t('inspector.relation'),
@@ -172,7 +173,7 @@ export function uiFeatureList(context) {
             }
 
             var allEntities = graph.entities;
-            var localResults = [];
+            const localResults = [];
             for (var id in allEntities) {
                 var entity = allEntities[id];
                 if (!entity) continue;
@@ -196,11 +197,9 @@ export function uiFeatureList(context) {
 
                 if (localResults.length > 100) break;
             }
-            localResults = localResults.sort(function byDistance(a, b) {
-                return a.distance - b.distance;
-            });
-            result = result.concat(localResults);
+            localResults.sort((a, b) => a.distance - b.distance);
 
+            const geocodeResults = [];
             (_geocodeResults || []).forEach(function(d) {
                 if (d.osm_type && d.osm_id) {    // some results may be missing these - #1890
 
@@ -220,7 +219,7 @@ export function uiFeatureList(context) {
                     var matched = presetManager.match(tempEntity, tempGraph);
                     var type = (matched && matched.name()) || utilDisplayType(id);
 
-                    result.push({
+                    geocodeResults.push({
                         id: tempEntity.id,
                         geometry: tempEntity.geometry(tempGraph),
                         type: type,
@@ -232,27 +231,28 @@ export function uiFeatureList(context) {
                 }
             });
 
+            const extraResults = [];
             if (q.match(/^[0-9]+$/)) {
                 // if query is just a number, possibly an OSM ID without a prefix
-                result.push({
+                extraResults.push({
                     id: 'n' + q,
                     geometry: 'point',
                     type: t('inspector.node'),
                     name: q
                 });
-                result.push({
+                extraResults.push({
                     id: 'w' + q,
                     geometry: 'line',
                     type: t('inspector.way'),
                     name: q
                 });
-                result.push({
+                extraResults.push({
                     id: 'r' + q,
                     geometry: 'relation',
                     type: t('inspector.relation'),
                     name: q
                 });
-                result.push({
+                extraResults.push({
                     id: 'note' + q,
                     geometry: 'note',
                     type: t('note.note'),
@@ -260,7 +260,7 @@ export function uiFeatureList(context) {
                 });
             }
 
-            return result;
+            return [...idResult, ...localResults, ...coordResult, ...geocodeResults, ...extraResults];
         }
 
 
