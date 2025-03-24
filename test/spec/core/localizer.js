@@ -99,6 +99,7 @@ describe('iD.coreLocalizer', function() {
             zh: true,
             'zh-CN': true,
         };
+
         it.each([
             /* [requested, matching] */
             [[], ['en']],
@@ -113,6 +114,10 @@ describe('iD.coreLocalizer', function() {
             const localiser = iD.coreLocalizer();
             localiser.preferredLocaleCodes(requested);
             expect(localiser.localesToUseFrom(SUPPORTED_LANGS)).toStrictEqual(matching);
+        });
+
+        after(function() {
+            iD.coreLocalizer().preferredLocaleCodes([]);
         });
     });
 });
