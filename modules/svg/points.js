@@ -1,6 +1,6 @@
 import deepEqual from 'fast-deep-equal';
 import { geoScaleToZoom } from '../geo';
-import { osmEntity } from '../osm';
+import { osmEntity, osmIsInterestingTag } from '../osm';
 import { svgPointTransform } from './helpers';
 import { svgTagClasses } from './tag_classes';
 import { presetManager } from '../presets';
@@ -8,10 +8,28 @@ import { presetManager } from '../presets';
 export function svgPoints(projection, context) {
 
     function markerPath(selection, klass) {
+        const isHousenumber = d => {
+            const tagKeys = Object.keys(d.tags);
+            if (tagKeys.length === 0) return false;
+            //return d.tags['addr:housenumber'] &&
+            return Object.keys(d.tags).every(key =>
+                key.startsWith('addr:') || !osmIsInterestingTag(key));
+        };
+        const addressShieldWidth = d => {
+                return Math.min(6, Math.max(2, (d.tags['addr:housenumber'] || d.tags['addr:housename'] || '').length)) * 6 + 6;
+        };
         selection
             .attr('class', klass)
-            .attr('transform', 'translate(-8, -23)')
-            .attr('d', 'M 17,8 C 17,13 11,21 8.5,23.5 C 6,21 0,13 0,8 C 0,4 4,-0.5 8.5,-0.5 C 13,-0.5 17,4 17,8 z');
+            .attr('transform', d => isHousenumber(d)
+                ? `translate(-${addressShieldWidth(d)/2}, -8)`
+                : 'translate(-8, -23)')
+            .attr('d', d => {
+                if (!isHousenumber(d)) {
+                    return 'M 17,8 C 17,13 11,21 8.5,23.5 C 6,21 0,13 0,8 C 0,4 4,-0.5 8.5,-0.5 C 13,-0.5 17,4 17,8 z';
+                }
+                const shieldWidth = addressShieldWidth(d);
+                return `M ${shieldWidth},8 C ${shieldWidth},15 ${shieldWidth-2},16 ${shieldWidth-8},16 L 8,16 C 2,16 0,15 0,8 C 0,2 2,0 8,0 L ${shieldWidth-8},0 C ${shieldWidth-2},0 ${shieldWidth},2 ${shieldWidth},8 z`;
+            });
     }
 
     function sortY(a, b) {
@@ -22,8 +40,8 @@ export function svgPoints(projection, context) {
     // Avoid exit/enter if we're just moving stuff around.
     // The node will get a new version but we only need to run the update selection.
     function fastEntityKey(d) {
-        var mode = context.mode();
-        var isMoving = mode && /^(add|draw|drag|move|rotate)/.test(mode.id);
+        const mode = context.mode();
+        const isMoving = mode && /^(add|draw|drag|move|rotate)/.test(mode.id);
         return isMoving ? d.id : osmEntity.key(d);
     }
 

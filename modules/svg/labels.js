@@ -9,9 +9,9 @@ import {
     geoScaleToZoom, geoVecInterp, geoVecLength
 } from '../geo';
 import { presetManager } from '../presets';
-import { osmEntity } from '../osm';
+import { osmEntity, osmIsInterestingTag } from '../osm';
 import { utilDetect } from '../util/detect';
-import { utilDisplayName, utilDisplayNameForPath, utilEntitySelector } from '../util';
+import { utilArrayDifference, utilDisplayName, utilDisplayNameForPath, utilEntitySelector } from '../util';
 
 
 
@@ -27,7 +27,7 @@ export function svgLabels(projection, context) {
     var _entitybboxes = {};
 
     // Listed from highest to lowest priority
-    var labelStack = [
+    const labelStack = [
         ['line', 'aeroway', '*', 12],
         ['line', 'highway', 'motorway', 12],
         ['line', 'highway', 'trunk', 12],
@@ -62,7 +62,9 @@ export function svgLabels(projection, context) {
         ['point', 'ref', '*', 10],
         ['line', 'name', '*', 12],
         ['area', 'name', '*', 12],
-        ['point', 'name', '*', 10]
+        ['point', 'name', '*', 10],
+        ['point', 'addr:housenumber', '*', 8],
+        ['point', 'addr:housename', '*', 8]
     ];
 
 
@@ -163,14 +165,14 @@ export function svgLabels(projection, context) {
             .attr('class', function(d, i) {
                 return classes + ' ' + labels[i].classes + ' ' + d.id;
             })
-            .merge(texts)
-            .attr('x', get(labels, 'x'))
-            .attr('y', get(labels, 'y'))
             .style('text-anchor', get(labels, 'textAnchor'))
             .text(utilDisplayName)
             .each(function(d, i) {
                 textWidth(utilDisplayName(d), labels[i].height, this);
-            });
+            })
+            .merge(texts)
+            .attr('x', get(labels, 'x'))
+            .attr('y', get(labels, 'y'));
     }
 
 
@@ -291,16 +293,20 @@ export function svgLabels(projection, context) {
                     markerPadding = 0;
                 }
 
-                var coord = projection(entity.loc);
-                var nodePadding = 10;
-                var bbox = {
-                    minX: coord[0] - nodePadding,
-                    minY: coord[1] - nodePadding - markerPadding,
-                    maxX: coord[0] + nodePadding,
-                    maxY: coord[1] + nodePadding
-                };
+                if (!isAddressPoint(entity.tags)) {
+                    var coord = projection(entity.loc);
+                    var nodePadding = 10;
+                    var bbox = {
+                        minX: coord[0] - nodePadding,
+                        minY: coord[1] - nodePadding - markerPadding,
+                        maxX: coord[0] + nodePadding,
+                        maxY: coord[1] + nodePadding
+                    };
 
-                doInsert(bbox, entity.id + 'P');
+                    doInsert(bbox, entity.id + 'P');
+                } else {
+                    undoInsert(entity.id + 'P');
+                }
             }
 
             // From here on, treat vertices like points
@@ -391,18 +397,26 @@ export function svgLabels(projection, context) {
         }
 
 
+        function isAddressPoint(tags) {
+            const keys = Object.keys(tags);
+            return keys.length > 0 && keys.every(key =>
+                key.startsWith('addr:') || !osmIsInterestingTag(key));
+        }
+
         function getPointLabel(entity, width, height, geometry) {
             var y = (geometry === 'point' ? -12 : 0);
             var pointOffsets = {
                 ltr: [15, y, 'start'],
                 rtl: [-15, y, 'end']
             };
+            const isAddr = isAddressPoint(entity.tags);
 
             var textDirection = localizer.textDirection();
 
             var coord = projection(entity.loc);
             var textPadding = 2;
             var offset = pointOffsets[textDirection];
+            if (isAddr) offset = [0, 1, 'middle'];
             var p = {
                 height: height,
                 width: width,
@@ -412,8 +426,15 @@ export function svgLabels(projection, context) {
             };
 
             // insert a collision box for the text label..
-            var bbox;
-            if (textDirection === 'rtl') {
+            let bbox;
+            if (isAddr) {
+                bbox = {
+                    minX: p.x - (width / 2) - textPadding,
+                    minY: p.y - (height / 2) - textPadding,
+                    maxX: p.x + (width / 2) + textPadding,
+                    maxY: p.y + (height / 2) + textPadding
+                };
+            } else if (textDirection === 'rtl') {
                 bbox = {
                     minX: p.x - width - textPadding,
                     minY: p.y - (height / 2) - textPadding,
@@ -559,7 +580,7 @@ export function svgLabels(projection, context) {
             var padding = 2;
             var p = {};
 
-            if (picon) {  // icon and label..
+            if (picon && !shouldSkipIcon(preset)) {  // icon and label..
                 if (addIcon()) {
                     addLabel(iconSize + padding);
                     return p;
@@ -625,6 +646,13 @@ export function svgLabels(projection, context) {
             _rdrawn.insert(bbox);
         }
 
+        function undoInsert(id) {
+            var oldbox = _entitybboxes[id];
+            if (oldbox) {
+                _rdrawn.remove(oldbox);
+            }
+            delete _entitybboxes[id];
+        }
 
         function tryInsert(bboxes, id, saveSkipped) {
             var skipped = false;
@@ -700,26 +728,17 @@ export function svgLabels(projection, context) {
             .classed('nolabel', false);
 
         var mouse = context.map().mouse();
-        var graph = context.graph();
-        var selectedIDs = context.selectedIDs();
         var ids = [];
         var pad, bbox;
 
         // hide labels near the mouse
-        if (mouse) {
+        if (mouse && context.mode().id !== 'browse' && context.mode().id !== 'select') {
             pad = 20;
             bbox = { minX: mouse[0] - pad, minY: mouse[1] - pad, maxX: mouse[0] + pad, maxY: mouse[1] + pad };
             var nearMouse = _rdrawn.search(bbox).map(function(entity) { return entity.id; });
             ids.push.apply(ids, nearMouse);
         }
-
-        // hide labels on selected nodes (they look weird when dragging / haloed)
-        for (var i = 0; i < selectedIDs.length; i++) {
-            var entity = graph.hasEntity(selectedIDs[i]);
-            if (entity && entity.type === 'node') {
-                ids.push(selectedIDs[i]);
-            }
-        }
+        ids = utilArrayDifference(ids, context.mode()?.selectedIDs?.() || []);
 
         layers.selectAll(utilEntitySelector(ids))
             .classed('nolabel', true);

@@ -393,8 +393,8 @@ export function rendererMap(context) {
             .call(drawLines, graph, data, filter)
             .call(drawAreas, graph, data, filter)
             .call(drawMidpoints, graph, data, filter, map.trimmedExtent())
-            .call(drawLabels, graph, data, filter, _dimensions, fullRedraw)
-            .call(drawPoints, graph, data, filter);
+            .call(drawPoints, graph, data, filter)
+            .call(drawLabels, graph, data, filter, _dimensions, fullRedraw);
 
         dispatch.call('drawn', this, {full: true});
     }
