@@ -146,11 +146,26 @@ export function uiFieldAddress(field, context) {
             }
         }
 
-        var dropdowns = addressFormat.dropdowns || [
-            'city', 'county', 'country', 'district', 'hamlet',
-            'neighbourhood', 'place', 'postcode', 'province',
-            'quarter', 'state', 'street', 'street+place', 'subdistrict', 'suburb'
-        ];
+        const dropdowns = new Set([
+            'block_number',
+            'city',
+            'country',
+            'county',
+            'district',
+            'floor',
+            'hamlet',
+            'neighbourhood',
+            'place',
+            'postcode',
+            'province',
+            'quarter',
+            'state',
+            'street',
+            'street+place',
+            'subdistrict',
+            'suburb',
+            'town'
+        ]);
 
         var widths = addressFormat.widths || {
             housenumber: 1/5, unit: 1/5, street: 1/2, place: 1/2,
@@ -196,7 +211,7 @@ export function uiFieldAddress(field, context) {
 
 
         function addDropdown(d) {
-            if (dropdowns.indexOf(d.id) === -1) return;  // not a dropdown
+            if (!dropdowns.has(d.id)) return;  // not a dropdown
 
             var nearValues;
             switch (d.id) {
