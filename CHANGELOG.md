@@ -35,7 +35,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [@xxxx]: https://github.com/xxxx
 -->
 
-# unreleased (v2.33.0-dev)
+# v2.33.0
 
 #### :sparkles: Usability & Accessibility
 * Allow searching for coordinates in localized number format in search box ([#10805])
@@ -60,13 +60,10 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :earth_asia: Localization
 * Consider language scripts when determining the locale to use ([#10910], thanks [@k-yle])
 * Add phone format for Egypt ([#10916], thanks [@youssefelzedy])
-#### :hourglass: Performance
-#### :mortar_board: Walkthrough / Help
 #### :rocket: Presets
 * Don't inherit fields which the current preset already has a dedicated field for
 * Take location into account when setting a presets default values from regional fields
 * Roads with `motorroad=yes` show implied access restrictions (`foot=no`, `bicycle=no`, `horse=no`) ([id-tagging-schema#609], [#9333])
-#### :hammer: Development
 
 [#9333]: https://github.com/openstreetmap/iD/pull/9333
 [#10299]: https://github.com/openstreetmap/iD/issues/10299
