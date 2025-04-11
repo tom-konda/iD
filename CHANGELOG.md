@@ -49,6 +49,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 
 
 # v2.33.0
+##### 2025-04-09
 
 #### :sparkles: Usability & Accessibility
 * Allow searching for coordinates in localized number format in search box ([#10805])
