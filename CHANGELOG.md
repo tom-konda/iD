@@ -86,6 +86,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10401]: https://github.com/openstreetmap/iD/issues/10401
 [#10805]: https://github.com/openstreetmap/iD/pull/10805
 [#10843]: https://github.com/openstreetmap/iD/pull/10843
+[#10849]: https://github.com/openstreetmap/iD/pull/10849
 [#10852]: https://github.com/openstreetmap/iD/issues/10852
 [#10885]: https://github.com/openstreetmap/iD/issues/10885
 [#10910]: https://github.com/openstreetmap/iD/pull/10910
