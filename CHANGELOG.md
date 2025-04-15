@@ -41,6 +41,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :scissors: Operations
 #### :camera: Street-Level
 #### :white_check_mark: Validation
+* Show unchanged tags of a [deprecation rule](https://github.com/ideditor/schema-builder?tab=readme-ov-file#deprecations) explicitly in the validation warning ([#10104])
 #### :bug: Bugfixes
 * Fix removed tooltips from re-appearing when using keyboard navigation ([#9873])
 #### :earth_asia: Localization
@@ -49,6 +50,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :hammer: Development
 
 [#9873]: https://github.com/openstreetmap/iD/issues/9873
+[#10104]: https://github.com/openstreetmap/iD/issues/10104
 
 
 # v2.33.0
