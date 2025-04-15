@@ -40,6 +40,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :sparkles: Usability & Accessibility
 #### :scissors: Operations
 #### :camera: Street-Level
+* Keep photo viewer open when disabling Panoramax overlay ([#10966])
 #### :white_check_mark: Validation
 * Show unchanged tags of a [deprecation rule](https://github.com/ideditor/schema-builder?tab=readme-ov-file#deprecations) explicitly in the validation warning ([#10104])
 #### :bug: Bugfixes
@@ -51,6 +52,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 
 [#9873]: https://github.com/openstreetmap/iD/issues/9873
 [#10104]: https://github.com/openstreetmap/iD/issues/10104
+[#10966]: https://github.com/openstreetmap/iD/issues/10966
 
 
 # v2.33.0
