@@ -2,6 +2,7 @@ import { geoSphericalDistance } from '../geo/geo';
 import { osmRelation } from '../osm/relation';
 import { osmWay } from '../osm/way';
 import { utilArrayIntersection, utilWrap, utilArrayUniq } from '../util';
+import { osmSummableTags } from '../osm/tags';
 
 
 // Split a way at the given node.
@@ -136,31 +137,30 @@ export function actionSplit(nodeIds, newWayIds) {
             wayB = wayB.update({ nodes: nodesB });
         }
 
-        if (wayA.tags.step_count) {
-            // divide up the the step count proportionally between the two ways
+        for (const key in wayA.tags) {
+            if (!osmSummableTags.has(key)) continue;
 
-            var stepCount = Number(wayA.tags.step_count);
-            if (stepCount &&
+            // divide up the the e.g. step count proportionally between the two ways
+            var count = Number(wayA.tags[key]);
+            if (count &&
                 // ensure a number
-                isFinite(stepCount) &&
+                isFinite(count) &&
                 // ensure positive
-                stepCount > 0 &&
+                count > 0 &&
                 // ensure integer
-                Math.round(stepCount) === stepCount) {
-
+                Math.round(count) === count) {
                 var tagsA = Object.assign({}, wayA.tags);
                 var tagsB = Object.assign({}, wayB.tags);
 
                 var ratioA = lengthA / (lengthA + lengthB);
-                var countA = Math.round(stepCount * ratioA);
-                tagsA.step_count = countA.toString();
-                tagsB.step_count = (stepCount - countA).toString();
+                var countA = Math.round(count * ratioA);
+                tagsA[key] = countA.toString();
+                tagsB[key] = (count - countA).toString();
 
                 wayA = wayA.update({ tags: tagsA });
                 wayB = wayB.update({ tags: tagsB });
             }
         }
-
 
         graph = graph.replace(wayA);
         graph = graph.replace(wayB);
