@@ -17,7 +17,7 @@ import { utilGetDimensions } from '../util/dimensions';
 import { utilRebind } from '../util/rebind';
 import { utilZoomPan } from '../util/zoom_pan';
 import { utilDoubleUp } from '../util/double_up';
-import { isArray } from 'lodash-es';
+import { isArray, clamp } from 'lodash-es';
 
 // constants
 var TILESIZE = 256;
@@ -25,10 +25,6 @@ var minZoom = 2;
 var maxZoom = 24;
 var kMin = geoZoomToScale(minZoom, TILESIZE);
 var kMax = geoZoomToScale(maxZoom, TILESIZE);
-
-function clamp(num, min, max) {
-    return Math.max(min, Math.min(num, max));
-}
 
 
 export function rendererMap(context) {

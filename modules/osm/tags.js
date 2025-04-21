@@ -296,7 +296,7 @@ export function isColourValid(value) {
 }
 
 // https://wiki.openstreetmap.org/wiki/Special:WhatLinksHere/Property:P44
-export var osmMutuallyExclusiveTagPairs = [
+export const osmMutuallyExclusiveTagPairs = [
     ['noname', 'name'],
     ['noref', 'ref'],
     ['nohousenumber', 'addr:housenumber'],

@@ -1,4 +1,6 @@
 import deepEqual from 'fast-deep-equal';
+import { clamp } from 'lodash-es';
+
 import { geoScaleToZoom } from '../geo';
 import { osmEntity, osmIsInterestingTag } from '../osm';
 import { svgPointTransform } from './helpers';
