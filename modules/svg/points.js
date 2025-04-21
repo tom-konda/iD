@@ -6,6 +6,7 @@ import { osmEntity, osmIsInterestingTag } from '../osm';
 import { svgPointTransform } from './helpers';
 import { svgTagClasses } from './tag_classes';
 import { presetManager } from '../presets';
+import { textWidth } from './labels';
 
 export function svgPoints(projection, context) {
 
@@ -13,12 +14,12 @@ export function svgPoints(projection, context) {
         const isHousenumber = d => {
             const tagKeys = Object.keys(d.tags);
             if (tagKeys.length === 0) return false;
-            //return d.tags['addr:housenumber'] &&
             return Object.keys(d.tags).every(key =>
                 key.startsWith('addr:') || !osmIsInterestingTag(key));
         };
         const addressShieldWidth = d => {
-                return Math.min(6, Math.max(2, (d.tags['addr:housenumber'] || d.tags['addr:housename'] || '').length)) * 6 + 6;
+            const width = textWidth(d.tags['addr:housenumber'] || d.tags['addr:housename'] || '', 10, selection.node().parentElement);
+            return clamp(width, 10, 34) + 8;
         };
         selection
             .attr('class', klass)
