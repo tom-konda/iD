@@ -91,8 +91,8 @@ export function validationOutdatedTags() {
         }
       });
     }
-    const deprecationDiff = utilTagDiff(oldTags, newTags).concat(
-      Object.keys(oldTags)
+    const deprecationDiff = utilTagDiff(oldTags, newTags);
+    const deprecationDiffContext = Object.keys(oldTags)
         .filter(key => deprecatedTags?.some(deprecated => deprecated.replace?.[key] !== undefined))
         .filter(key => newTags[key] === oldTags[key])
         .map(key => ({
@@ -101,7 +101,7 @@ export function validationOutdatedTags() {
           oldVal: oldTags[key],
           newVal: newTags[key],
           display: '&nbsp; ' + key + '=' + oldTags[key]
-        })));
+        }));
 
     let issues = [];
     issues.provisional = (_waitingForDeprecated || waitingForNsi);
@@ -125,7 +125,7 @@ export function validationOutdatedTags() {
         reference: selection => showReference(
           selection,
           t.append(`issues.outdated_tags.${prefix}reference`),
-          deprecationDiff
+          [...deprecationDiff, ...deprecationDiffContext]
         ),
         entityIds: [entity.id],
         hash: utilHashcode(JSON.stringify(deprecationDiff)),
