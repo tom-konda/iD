@@ -75,11 +75,6 @@ export function svgLabels(projection, context) {
     }
 
 
-    function get(array, prop) {
-        return function(d, i) { return array[i][prop]; };
-    }
-
-
     function drawLinePaths(selection, labels, filter, classes) {
         var paths = selection.selectAll('path:not(.debug)')
             .filter(d => filter(d.entity))
@@ -373,12 +368,6 @@ export function svgLabels(projection, context) {
                 });
         }
 
-
-        function isAddressPoint(tags) {
-            const keys = Object.keys(tags);
-            return keys.length > 0 && keys.every(key =>
-                key.startsWith('addr:') || !osmIsInterestingTag(key));
-        }
 
         function getPointLabel(entity, width, height, style) {
             var y = (style.geometry === 'point' ? -12 : 0);
@@ -775,7 +764,7 @@ export function svgLabels(projection, context) {
 }
 
 
-var _textWidthCache = {};
+const _textWidthCache = {};
 export function textWidth(text, size, container) {
     let c = _textWidthCache[size];
     if (!c) c = _textWidthCache[size] = {};
@@ -790,4 +779,24 @@ export function textWidth(text, size, container) {
     c[text] = elem.getComputedTextLength();
     elem.remove();
     return c[text];
+}
+
+
+const nonPrimaryKeys = new Set([
+    'check_date',
+    'fixme',
+    'layer',
+    'level',
+    'level:ref',
+    'note'
+]);
+const nonPrimaryKeysRegex = /^(ref|survey|note):/;
+export function isAddressPoint(tags) {
+    const keys = Object.keys(tags);
+    return keys.length > 0 && keys.every(key =>
+        key.startsWith('addr:') ||
+        !osmIsInterestingTag(key) ||
+        nonPrimaryKeys.has(key) ||
+        nonPrimaryKeysRegex.test(key)
+    );
 }

@@ -2,32 +2,26 @@ import deepEqual from 'fast-deep-equal';
 import { clamp } from 'lodash-es';
 
 import { geoScaleToZoom } from '../geo';
-import { osmEntity, osmIsInterestingTag } from '../osm';
+import { osmEntity } from '../osm';
 import { svgPointTransform } from './helpers';
 import { svgTagClasses } from './tag_classes';
 import { presetManager } from '../presets';
-import { textWidth } from './labels';
+import { textWidth, isAddressPoint } from './labels';
 
 export function svgPoints(projection, context) {
 
     function markerPath(selection, klass) {
-        const isHousenumber = d => {
-            const tagKeys = Object.keys(d.tags);
-            if (tagKeys.length === 0) return false;
-            return Object.keys(d.tags).every(key =>
-                key.startsWith('addr:') || !osmIsInterestingTag(key));
-        };
         const addressShieldWidth = d => {
             const width = textWidth(d.tags['addr:housenumber'] || d.tags['addr:housename'] || '', 10, selection.node().parentElement);
             return clamp(width, 10, 34) + 8;
         };
         selection
             .attr('class', klass)
-            .attr('transform', d => isHousenumber(d)
+            .attr('transform', d => isAddressPoint(d.tags)
                 ? `translate(-${addressShieldWidth(d)/2}, -8)`
                 : 'translate(-8, -23)')
             .attr('d', d => {
-                if (!isHousenumber(d)) {
+                if (!isAddressPoint(d.tags)) {
                     return 'M 17,8 C 17,13 11,21 8.5,23.5 C 6,21 0,13 0,8 C 0,4 4,-0.5 8.5,-0.5 C 13,-0.5 17,4 17,8 z';
                 }
                 const shieldWidth = addressShieldWidth(d);
