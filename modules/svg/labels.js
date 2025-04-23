@@ -81,7 +81,7 @@ export function svgLabels(projection, context) {
 
 
     function drawLinePaths(selection, labels, filter, classes) {
-        var paths = selection.selectAll('path')
+        var paths = selection.selectAll('path:not(.debug)')
             .filter(d => filter(d.entity))
             .data(labels, d => osmEntity.key(d.entity));
 
