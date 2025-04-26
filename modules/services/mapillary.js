@@ -524,15 +524,13 @@ export default {
 
     // Update the URL with current image id
     updateUrlImage: function(imageId) {
-        if (!window.mocha) {
-            const hash = utilStringQs(window.location.hash);
-            if (imageId) {
-                hash.photo = 'mapillary/' + imageId;
-            } else {
-                delete hash.photo;
-            }
-            window.location.replace('#' + utilQsString(hash, true));
+        const hash = utilStringQs(window.location.hash);
+        if (imageId) {
+            hash.photo = 'mapillary/' + imageId;
+        } else {
+            delete hash.photo;
         }
+        window.history.replaceState(null, '', '#' + utilQsString(hash, true));
     },
 
 

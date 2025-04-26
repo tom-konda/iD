@@ -163,7 +163,7 @@ export function uiIntro(context) {
       overlays.forEach(d => context.background().toggleOverlayLayer(d));
       if (history) { context.history().fromJSON(history, false); }
       context.map().centerZoom(center, zoom);
-      window.location.replace(hash);
+      window.history.replaceState(null, '', hash);
       context.inIntro(false);
     });
 

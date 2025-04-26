@@ -584,15 +584,13 @@ export default {
   },
 
   updateUrlImage: function (key) {
-    if (!window.mocha) {
-      const hash = utilStringQs(window.location.hash);
-      if (key) {
-        hash.photo = 'vegbilder/' + key;
-      } else {
-        delete hash.photo;
-      }
-      window.location.replace('#' + utilQsString(hash, true));
+    const hash = utilStringQs(window.location.hash);
+    if (key) {
+      hash.photo = 'vegbilder/' + key;
+    } else {
+      delete hash.photo;
     }
+    window.history.replaceState(null, '', '#' + utilQsString(hash, true));
   },
 
   validHere: function(extent) {

@@ -54,17 +54,15 @@ export function rendererFeatures(context) {
 
 
     function update() {
-        if (!window.mocha) {
-            var hash = utilStringQs(window.location.hash);
-            var disabled = features.disabled();
-            if (disabled.length) {
-                hash.disable_features = disabled.join(',');
-            } else {
-                delete hash.disable_features;
-            }
-            window.location.replace('#' + utilQsString(hash, true));
-            prefs('disabled-features', disabled.join(','));
+        const hash = utilStringQs(window.location.hash);
+        const disabled = features.disabled();
+        if (disabled.length) {
+            hash.disable_features = disabled.join(',');
+        } else {
+            delete hash.disable_features;
         }
+        window.history.replaceState(null, '', '#' + utilQsString(hash, true));
+        prefs('disabled-features', disabled.join(','));
         _hidden = features.hidden();
         dispatch.call('change');
         dispatch.call('redraw');

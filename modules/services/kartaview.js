@@ -554,15 +554,13 @@ export default {
 
 
     updateUrlImage: function(imageKey) {
-        if (!window.mocha) {
-            var hash = utilStringQs(window.location.hash);
-            if (imageKey) {
-                hash.photo = 'kartaview/' + imageKey;
-            } else {
-                delete hash.photo;
-            }
-            window.location.replace('#' + utilQsString(hash, true));
+        const hash = utilStringQs(window.location.hash);
+        if (imageKey) {
+            hash.photo = 'kartaview/' + imageKey;
+        } else {
+            delete hash.photo;
         }
+        window.history.replaceState(null, '', '#' + utilQsString(hash, true));
     },
 
 
