@@ -321,7 +321,7 @@ export function svgLabels(projection, context) {
 
                 var getName = (geometry === 'line') ? utilDisplayNameForPath : utilDisplayName;
                 var name = getName(entity);
-                var width = name && textWidth(name, fontSize, selection.select('g.layer-osm.labels g.label').node());
+                var width = name && textWidth(name, fontSize, selection.select('g.layer-osm.labels').node());
                 var p = null;
 
                 if (geometry === 'point' || geometry === 'vertex') {
@@ -332,7 +332,7 @@ export function svgLabels(projection, context) {
                     if (renderAs.geometry === 'vertex' && zoom < 17) continue;
                     while (renderAs.isAddr && width > 36) {
                         name = `${name.substring(0, name.replace(/…$/, '').length - 1)}…`;
-                        width = textWidth(name, fontSize, selection.select('g.layer-osm.labels g.label').node());
+                        width = textWidth(name, fontSize, selection.select('g.layer-osm.labels').node());
                     }
 
                     p = getPointLabel(entity, width, fontSize, renderAs);
