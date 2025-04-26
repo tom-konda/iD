@@ -39,6 +39,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 
 #### :sparkles: Usability & Accessibility
 * Show full relation label as hover-text in _membership editor_, disambiguate relations with duplicate labels by appending the relation id ([#10492])
+* More consistently round non-integer initial zoom when zooming in/out when using the zoom buttons or `+`/`-` keyboard shortcuts
 #### :scissors: Operations
 * Preserve the sum of certain tags (`step_count`, `parking:*:capacity`) during _join_ operation ([#10492], thanks [@ChaitanyaKadu03])
 * Preserve total value of `parking:*:capacity` tags during _split_ operation by distributing it proportionally to the resulting ways ([#10492])
