@@ -43,6 +43,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :scissors: Operations
 * Preserve the sum of certain tags (`step_count`, `parking:*:capacity`) during _join_ operation ([#10492], thanks [@ChaitanyaKadu03])
 * Preserve total value of `parking:*:capacity` tags during _split_ operation by distributing it proportionally to the resulting ways ([#10492])
+* A _split_ operation will now only split the ways that contain all selected nodes when more than one node is selected ([#10997])
 #### :camera: Street-Level
 * Keep photo viewer open when disabling Panoramax overlay ([#10966])
 * Don't de-select map feature when clicking on a street level photo ([#10959])
@@ -52,6 +53,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix removed tooltips from re-appearing when using keyboard navigation ([#9873])
 * Only consider feature with proper lifecycle tags in "past/futures" layer ([#10943])
 * Fix zoom level from resetting to the starting value when switching background imagery layer during the zoom transition
+* Fix invalid single-noded ways from being created by a _split_ operation under certain conditions when multiple nodes are selected ([#10997])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
@@ -67,6 +69,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10946]: https://github.com/openstreetmap/iD/issues/10946
 [#10959]: https://github.com/openstreetmap/iD/issues/10959
 [#10966]: https://github.com/openstreetmap/iD/issues/10966
+[#10997]: https://github.com/openstreetmap/iD/issues/10997
 [@ChaitanyaKadu03]: https://github.com/ChaitanyaKadu03
 
 
