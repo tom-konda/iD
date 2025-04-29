@@ -169,7 +169,8 @@ export function uiPhotoviewer(context) {
 
                 const graph = context.graph();
                 const entities = context.selectedIDs()
-                    .map(id => graph.entity(id));
+                    .map(id => graph.hasEntity(id))
+                    .filter(Boolean);
 
                 if (entities.map(entity => entity.tags[tagName])
                     .every(value => value === activeImage?.id)) {
