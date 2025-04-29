@@ -646,8 +646,8 @@ export default {
    * showViewer()
    */
   showViewer: function(context) {
-    let wrap = context.container().select('.photoviewer');
-    let isHidden = wrap.selectAll('.photo-wrapper.ms-wrapper.hide').size();
+    const wrap = context.container().select('.photoviewer');
+    const isHidden = wrap.selectAll('.photo-wrapper.ms-wrapper.hide').size();
 
     if (isHidden) {
       for (const service of Object.values(services)) {
@@ -657,11 +657,11 @@ export default {
         }
       }
       wrap
+        .classed('hide', false)
         .selectAll('.photo-wrapper.ms-wrapper')
         .classed('hide', false);
     }
 
-    wrap.classed('hide', false);
     return this;
   },
 

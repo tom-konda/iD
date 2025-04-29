@@ -367,8 +367,8 @@ export default {
 
 
     showViewer: function(context) {
-        var viewer = context.container().select('.photoviewer');
-        var isHidden = viewer.selectAll('.photo-wrapper.kartaview-wrapper.hide').size();
+        const wrap = context.container().select('.photoviewer');
+        const isHidden = wrap.selectAll('.photo-wrapper.kartaview-wrapper.hide').size();
 
         if (isHidden) {
             for (const service of Object.values(services)) {
@@ -377,12 +377,11 @@ export default {
                     service.hideViewer(context);
                 }
             }
-            viewer
+            wrap.classed('hide', false)
                 .selectAll('.photo-wrapper.kartaview-wrapper')
                 .classed('hide', false);
         }
 
-        viewer.classed('hide', false);
         return this;
     },
 

@@ -574,8 +574,8 @@ export default {
     },
 
     showViewer:function (context) {
-        let wrap = context.container().select('.photoviewer');
-        let isHidden = wrap.selectAll('.photo-wrapper.mapilio-wrapper.hide').size();
+        const wrap = context.container().select('.photoviewer');
+        const isHidden = wrap.selectAll('.photo-wrapper.mapilio-wrapper.hide').size();
 
         if (isHidden) {
             for (const service of Object.values(services)) {
@@ -584,12 +584,11 @@ export default {
                     service.hideViewer(context);
                 }
             }
-            wrap
+            wrap.classed('hide', false)
                 .selectAll('.photo-wrapper.mapilio-wrapper')
                 .classed('hide', false);
         }
 
-        wrap.classed('hide', false);
         return this;
     },
 
@@ -611,7 +610,6 @@ export default {
             .classed('currentView', false);
 
         this.setActiveImage();
-
         return this.setStyles(context, null);
     },
 

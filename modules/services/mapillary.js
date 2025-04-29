@@ -261,6 +261,8 @@ export default {
             sequences: { rtree: new RBush(), lineString: {} },
             requests: { loaded: {}, inflight: {} }
         };
+
+        _mlyActiveImage = null;
     },
 
     // Get visible images
@@ -475,7 +477,7 @@ export default {
                 }
             }
 
-            wrap
+            wrap.classed('hide', false)
                 .selectAll('.photo-wrapper.mly-wrapper')
                 .classed('hide', false);
 
@@ -483,8 +485,6 @@ export default {
         }
 
         _isViewerOpen = true;
-        wrap.classed('hide', false);
-
         return this;
     },
 

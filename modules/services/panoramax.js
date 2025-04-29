@@ -684,8 +684,8 @@ export default {
      * @param {*} context
      */
     showViewer: function (context) {
-        let wrap = context.container().select('.photoviewer');
-        let isHidden = wrap.selectAll('.photo-wrapper.panoramax-wrapper.hide').size();
+        const wrap = context.container().select('.photoviewer');
+        const isHidden = wrap.selectAll('.photo-wrapper.panoramax-wrapper.hide').size();
         if (isHidden) {
             for (const service of Object.values(services)) {
                 if (service === this) continue;
@@ -693,14 +693,12 @@ export default {
                     service.hideViewer(context);
                 }
             }
-            wrap
+            wrap.classed('hide', false)
                 .selectAll('.photo-wrapper.panoramax-wrapper')
                 .classed('hide', false);
         }
 
         _isViewerOpen = true;
-        wrap.classed('hide', false);
-
         return this;
     },
 

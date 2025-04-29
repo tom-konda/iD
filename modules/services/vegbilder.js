@@ -505,10 +505,10 @@ export default {
         }
       }
       viewer
+        .classed('hide', false)
         .selectAll('.photo-wrapper.vegbilder-wrapper')
         .classed('hide', false);
     }
-    viewer.classed('hide', false);
     return this;
   },
 
