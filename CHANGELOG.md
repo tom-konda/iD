@@ -60,6 +60,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
+* Change background imagery of walkthrough tutorial to Bing (the previous source is not available anymore)
 #### :rocket: Presets
 * Suggest housenumber/housename values from surrounding areas ([#10946])
 #### :hammer: Development
