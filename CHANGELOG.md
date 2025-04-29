@@ -64,6 +64,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :rocket: Presets
 * Suggest housenumber/housename values from surrounding areas ([#10946])
 #### :hammer: Development
+* Drop support for Node 18
 
 [#9873]: https://github.com/openstreetmap/iD/issues/9873
 [#10104]: https://github.com/openstreetmap/iD/issues/10104
