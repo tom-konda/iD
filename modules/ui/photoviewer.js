@@ -77,18 +77,12 @@ export function uiPhotoviewer(context) {
 
         function setPhotoTagButton() {
             const service = getServiceId();
-            const isActiveForService = addPhotoIdButton.has(service) && services[service].isViewerOpen();
+            const isActiveForService = addPhotoIdButton.has(service) &&
+                services[service].isViewerOpen() &&
+                layerEnabled(service) &&
+                context.mode().id === 'select';
 
-            if (isActiveForService) {
-                if (context.mode().id !== 'select' || !layerEnabled(service)) {
-                    buttonRemove();
-                } else {
-                    buttonCreate();
-                    buttonShowHide(service);
-                }
-            } else {
-                buttonRemove();
-            }
+            renderAddPhotoIdButton(service, isActiveForService);
 
             function layerEnabled(which) {
                 const layers = context.layers();
@@ -108,8 +102,12 @@ export function uiPhotoviewer(context) {
                 return false;
             }
 
-            function buttonCreate() {
-                const button = selection.selectAll('.set-photo-from-viewer').data([0]);
+            function renderAddPhotoIdButton(service, shouldDisplay) {
+                const button = selection.selectAll('.set-photo-from-viewer').data(shouldDisplay ? [0] : []);
+
+                button.exit()
+                    .remove();
+
                 const buttonEnter = button.enter()
                     .append('button')
                     .attr('class', 'set-photo-from-viewer')
@@ -145,33 +143,19 @@ export function uiPhotoviewer(context) {
                     const panoramaxControls = selection.select('.panoramax-wrapper .pnlm-zoom-controls.pnlm-controls');
 
                     panoramaxControls
-                        .style('margin-top', '36px');
+                        .style('margin-top', shouldDisplay ? '36px' : '6px');
                 }
 
-                return buttonEnter;
-            }
+                if (!shouldDisplay) return;
 
-            function buttonRemove() {
-                const button = selection.selectAll('.set-photo-from-viewer').data([0]);
-                button.remove();
-
-                if (service === 'panoramax') {
-                    const panoramaxControls = selection.select('.panoramax-wrapper .pnlm-zoom-controls.pnlm-controls');
-
-                    panoramaxControls
-                        .style('margin-top', '6px');
-                }
-            }
-
-            function buttonShowHide(tagName) {
-                const activeImage = services[tagName].getActiveImage();
+                const activeImage = services[service].getActiveImage();
 
                 const graph = context.graph();
                 const entities = context.selectedIDs()
                     .map(id => graph.hasEntity(id))
                     .filter(Boolean);
 
-                if (entities.map(entity => entity.tags[tagName])
+                if (entities.map(entity => entity.tags[service])
                     .every(value => value === activeImage?.id)) {
                     buttonDisable('already_set');
                 } else if (activeImage && entities
