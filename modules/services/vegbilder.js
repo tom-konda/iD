@@ -487,8 +487,8 @@ export default {
     _currentFrame = d.is_sphere? _pannellumFrame : _planeFrame;
 
     _currentFrame
-      .selectPhoto(d, keepOrientation)
-      .showPhotoFrame(wrap);
+      .showPhotoFrame(wrap)
+      .selectPhoto(d, keepOrientation);
 
     return this;
   },
