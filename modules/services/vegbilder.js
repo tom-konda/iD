@@ -8,6 +8,7 @@ import { utilQsString, utilTiler, utilRebind, utilArrayUnion, utilStringQs} from
 import {geoExtent, geoScaleToZoom, geoVecAngle, geoVecEqual} from '../geo';
 import pannellumPhotoFrame from './pannellum_photo';
 import planePhotoFrame from './plane_photo';
+import { services } from './';
 
 
 const owsEndpoint = 'https://www.vegvesen.no/kart/ogc/vegbilder_1_0/ows?';
@@ -493,20 +494,21 @@ export default {
   },
 
   showViewer: function (context) {
-    const viewer = context.container().select('.photoviewer')
-      .classed('hide', false);
-
+    const viewer = context.container().select('.photoviewer');
     const isHidden = viewer.selectAll('.photo-wrapper.vegbilder-wrapper.hide').size();
 
     if (isHidden) {
-      viewer
-        .selectAll('.photo-wrapper:not(.vegbilder-wrapper)')
-        .classed('hide', true);
-
+      for (const service of Object.values(services)) {
+        if (service === this) continue;
+        if (typeof service.hideViewer === 'function') {
+          service.hideViewer(context);
+        }
+      }
       viewer
         .selectAll('.photo-wrapper.vegbilder-wrapper')
         .classed('hide', false);
     }
+    viewer.classed('hide', false);
     return this;
   },
 

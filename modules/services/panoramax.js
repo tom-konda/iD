@@ -9,6 +9,8 @@ import { geoExtent, geoScaleToZoom } from '../geo';
 import { t, localizer } from '../core/localizer';
 import pannellumPhotoFrame from './pannellum_photo';
 import planePhotoFrame from './plane_photo';
+import { services } from './';
+
 
 const apiUrl = 'https://api.panoramax.xyz/';
 const tileUrl = apiUrl + 'api/map/{z}/{x}/{y}.mvt';
@@ -255,9 +257,6 @@ export default {
             mockSequences: { rtree: new RBush(), lineString: {} },
             requests: { loaded: {}, inflight: {} }
         };
-
-        _currentScene.currentImage = null;
-        _activeImage = null;
     },
 
     /**
@@ -685,19 +684,22 @@ export default {
      * @param {*} context
      */
     showViewer: function (context) {
-        let wrap = context.container().select('.photoviewer')
-            .classed('hide', false);
+        let wrap = context.container().select('.photoviewer');
         let isHidden = wrap.selectAll('.photo-wrapper.panoramax-wrapper.hide').size();
         if (isHidden) {
-            wrap
-                .selectAll('.photo-wrapper:not(.panoramax-wrapper)')
-                .classed('hide', true);
+            for (const service of Object.values(services)) {
+                if (service === this) continue;
+                if (typeof service.hideViewer === 'function') {
+                    service.hideViewer(context);
+                }
+            }
             wrap
                 .selectAll('.photo-wrapper.panoramax-wrapper')
                 .classed('hide', false);
         }
 
         _isViewerOpen = true;
+        wrap.classed('hide', false);
 
         return this;
     },

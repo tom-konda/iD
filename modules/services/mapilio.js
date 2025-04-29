@@ -10,6 +10,7 @@ import { isEqual } from 'lodash';
 import { utilRebind, utilTiler, utilQsString, utilStringQs, utilSetTransform } from '../util';
 import {geoExtent, geoScaleToZoom} from '../geo';
 import {localizer} from '../core/localizer';
+import { services } from './';
 
 const apiUrl = 'https://end.mapilio.com';
 const imageBaseUrl = 'https://cdn.mapilio.com/im';
@@ -222,8 +223,6 @@ export default {
             sequences: { rtree: new RBush(), lineString: {} },
             requests: { loaded: {}, inflight: {} }
         };
-
-        _activeImage = null;
     },
 
     // Get visible images
@@ -575,21 +574,22 @@ export default {
     },
 
     showViewer:function (context) {
-        let wrap = context.container().select('.photoviewer')
-            .classed('hide', false);
-
+        let wrap = context.container().select('.photoviewer');
         let isHidden = wrap.selectAll('.photo-wrapper.mapilio-wrapper.hide').size();
 
         if (isHidden) {
-            wrap
-                .selectAll('.photo-wrapper:not(.mapilio-wrapper)')
-                .classed('hide', true);
-
+            for (const service of Object.values(services)) {
+                if (service === this) continue;
+                if (typeof service.hideViewer === 'function') {
+                    service.hideViewer(context);
+                }
+            }
             wrap
                 .selectAll('.photo-wrapper.mapilio-wrapper')
                 .classed('hide', false);
         }
 
+        wrap.classed('hide', false);
         return this;
     },
 

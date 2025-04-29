@@ -15,6 +15,8 @@ import {
 
 import { utilAesDecrypt, utilArrayUnion, utilQsString, utilRebind, utilStringQs, utilTiler, utilUniqueDomId } from '../util';
 
+import { services } from './';
+
 
 const streetsideApi = 'https://dev.virtualearth.net/REST/v1/Imagery/MetaData/Streetside?mapArea={bbox}&key={key}&count={count}&uriScheme=https';
 const maxResults = 500;
@@ -644,22 +646,22 @@ export default {
    * showViewer()
    */
   showViewer: function(context) {
-
-    let wrap = context.container().select('.photoviewer')
-      .classed('hide', false);
-
+    let wrap = context.container().select('.photoviewer');
     let isHidden = wrap.selectAll('.photo-wrapper.ms-wrapper.hide').size();
 
     if (isHidden) {
-      wrap
-        .selectAll('.photo-wrapper:not(.ms-wrapper)')
-        .classed('hide', true);
-
+      for (const service of Object.values(services)) {
+        if (service === this) continue;
+        if (typeof service.hideViewer === 'function') {
+          service.hideViewer(context);
+        }
+      }
       wrap
         .selectAll('.photo-wrapper.ms-wrapper')
         .classed('hide', false);
     }
 
+    wrap.classed('hide', false);
     return this;
   },
 

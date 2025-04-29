@@ -8,6 +8,7 @@ import { VectorTile } from '@mapbox/vector-tile';
 
 import { geoExtent, geoScaleToZoom } from '../geo';
 import { utilQsString, utilRebind, utilTiler, utilStringQs } from '../util';
+import { services } from './';
 
 const accessToken = 'MLY|4100327730013843|5bb78b81720791946a9a7b956c57b7cf';
 const apiUrl = 'https://graph.mapillary.com/';
@@ -260,8 +261,6 @@ export default {
             sequences: { rtree: new RBush(), lineString: {} },
             requests: { loaded: {}, inflight: {} }
         };
-
-        _mlyActiveImage = null;
     },
 
     // Get visible images
@@ -465,15 +464,16 @@ export default {
 
     // Make the image viewer visible
     showViewer: function(context) {
-        const wrap = context.container().select('.photoviewer')
-            .classed('hide', false);
-
+        const wrap = context.container().select('.photoviewer');
         const isHidden = wrap.selectAll('.photo-wrapper.mly-wrapper.hide').size();
 
         if (isHidden && _mlyViewer) {
-            wrap
-                .selectAll('.photo-wrapper:not(.mly-wrapper)')
-                .classed('hide', true);
+            for (const service of Object.values(services)) {
+                if (service === this) continue;
+                if (typeof service.hideViewer === 'function') {
+                    service.hideViewer(context);
+                }
+            }
 
             wrap
                 .selectAll('.photo-wrapper.mly-wrapper')
@@ -483,6 +483,7 @@ export default {
         }
 
         _isViewerOpen = true;
+        wrap.classed('hide', false);
 
         return this;
     },

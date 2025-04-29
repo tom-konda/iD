@@ -26,12 +26,11 @@ export function uiPhotoviewer(context) {
             .attr('class', 'thumb-hide')
             .attr('title', t('icons.close'))
             .on('click', function () {
-                if (services.streetside) { services.streetside.hideViewer(context); }
-                if (services.mapillary) { services.mapillary.hideViewer(context); }
-                if (services.kartaview) { services.kartaview.hideViewer(context); }
-                if (services.mapilio) { services.mapilio.hideViewer(context); }
-                if (services.panoramax) { services.panoramax.hideViewer(context); }
-                if (services.vegbilder) { services.vegbilder.hideViewer(context); }
+                for (const service of Object.values(services)) {
+                    if (typeof service.hideViewer === 'function') {
+                        service.hideViewer(context);
+                    }
+                }
             })
             .append('div')
             .call(svgIcon('#iD-icon-close'));

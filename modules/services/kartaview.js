@@ -7,6 +7,7 @@ import RBush from 'rbush';
 import { localizer } from '../core/localizer';
 import { geoExtent, geoScaleToZoom } from '../geo';
 import { utilQsString, utilRebind, utilSetTransform, utilStringQs, utilTiler } from '../util';
+import { services } from './';
 
 
 var apibase = 'https://kartaview.org';
@@ -191,8 +192,6 @@ export default {
             images: { inflight: {}, loaded: {}, nextPage: {}, rtree: new RBush(), forImageKey: {} },
             sequences: {}
         };
-
-        _oscSelectedImage = null;
     },
 
 
@@ -368,21 +367,22 @@ export default {
 
 
     showViewer: function(context) {
-        var viewer = context.container().select('.photoviewer')
-            .classed('hide', false);
-
+        var viewer = context.container().select('.photoviewer');
         var isHidden = viewer.selectAll('.photo-wrapper.kartaview-wrapper.hide').size();
 
         if (isHidden) {
-            viewer
-                .selectAll('.photo-wrapper:not(.kartaview-wrapper)')
-                .classed('hide', true);
-
+            for (const service of Object.values(services)) {
+                if (service === this) continue;
+                if (typeof service.hideViewer === 'function') {
+                    service.hideViewer(context);
+                }
+            }
             viewer
                 .selectAll('.photo-wrapper.kartaview-wrapper')
                 .classed('hide', false);
         }
 
+        viewer.classed('hide', false);
         return this;
     },
 

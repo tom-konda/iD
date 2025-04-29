@@ -79,13 +79,12 @@ describe('iD.servicePanoramax', function() {
     });
 
     describe('#reset', function() {
-        it('resets cache and image', function() {
+        it('resets cache', function() {
             panoramax.cache().foo = 'bar';
             panoramax.setActiveImage(context, {key: 'baz'});
 
             panoramax.reset();
             expect(panoramax.cache()).to.not.have.property('foo');
-            expect(panoramax.getActiveImage()).to.be.null;
         });
     });
 
