@@ -547,7 +547,6 @@ export default {
 
     // Initialize image viewer (Mapillar JS)
     initViewer: function(context) {
-        const that = this;
         if (!window.mapillary) return;
 
         const opts = {
@@ -577,7 +576,7 @@ export default {
         }
 
         _mlyViewer = new mapillary.Viewer(opts);
-        _mlyViewer.on('image', imageChanged);
+        _mlyViewer.on('image', imageChanged.bind(this));
         _mlyViewer.on('bearing', bearingChanged);
 
         if (_mlyViewerFilter) {
@@ -591,16 +590,16 @@ export default {
 
         // imageChanged: called after the viewer has changed images and is ready.
         function imageChanged(node) {
-            that.resetTags();
+            this.resetTags();
             const image = node.image;
-            that.setActiveImage(image);
-            that.setStyles(context, null);
+            this.setActiveImage(image);
+            this.setStyles(context, null);
             const loc = [image.originalLngLat.lng, image.originalLngLat.lat];
             context.map().centerEase(loc);
-            that.updateUrlImage(image.id);
+            this.updateUrlImage(image.id);
 
             if (_mlyShowFeatureDetections || _mlyShowSignDetections) {
-                that.updateDetections(image.id, `${apiUrl}/${image.id}/detections?access_token=${accessToken}&fields=id,image,geometry,value`);
+                this.updateDetections(image.id, `${apiUrl}/${image.id}/detections?access_token=${accessToken}&fields=id,image,geometry,value`);
             }
             dispatch.call('imageChanged');
         }
@@ -617,6 +616,7 @@ export default {
     selectImage: function(context, imageId) {
         if (_mlyViewer && imageId) {
             _mlyViewer.moveTo(imageId)
+                .then(image => this.setActiveImage(image))
                 .catch(function(e) {
                     console.error('mly3', e); // eslint-disable-line no-console
                 });
