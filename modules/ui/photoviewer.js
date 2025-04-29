@@ -83,29 +83,8 @@ export function uiPhotoviewer(context) {
                 if (context.mode().id !== 'select' || !layerEnabled(service)) {
                     buttonRemove();
                 } else {
-                    const button = buttonCreate();
-                    button.on('click', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setPhotoId();
-                        buttonDisable('already_set');
-                    });
+                    buttonCreate();
                     buttonShowHide(service);
-                }
-
-                function setPhotoId() {
-                    const activeServiceId = getServiceId();
-                    const image = services[activeServiceId].getActiveImage();
-
-                    const action = graph =>
-                        context.selectedIDs().reduce((graph, entityID) => {
-                            const tags = graph.entity(entityID).tags;
-                            const action = actionChangeTags(entityID, {...tags, [activeServiceId]: image.id});
-                            return action(graph);
-                        }, graph);
-
-                    const annotation = t('operations.change_tags.annotation');
-                    context.perform(action, annotation);
                 }
             } else {
                 buttonRemove();
@@ -142,7 +121,25 @@ export function uiPhotoviewer(context) {
 
                 buttonEnter.select('.tooltip')
                     .classed('dark', true)
-                    .style('width', '300px');
+                    .style('width', '300px')
+                    .merge(button)
+                    .on('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const activeServiceId = getServiceId();
+                        const image = services[activeServiceId].getActiveImage();
+
+                        const action = graph =>
+                            context.selectedIDs().reduce((graph, entityID) => {
+                                const tags = graph.entity(entityID).tags;
+                                const action = actionChangeTags(entityID, {...tags, [activeServiceId]: image.id});
+                                return action(graph);
+                            }, graph);
+
+                        const annotation = t('operations.change_tags.annotation');
+                        context.perform(action, annotation);
+                        buttonDisable('already_set');
+                    });
 
                 if (service === 'panoramax') {
                     const panoramaxControls = selection.select('.panoramax-wrapper .pnlm-zoom-controls.pnlm-controls');
