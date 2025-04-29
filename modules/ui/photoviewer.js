@@ -83,15 +83,13 @@ export function uiPhotoviewer(context) {
                 if (context.mode().id !== 'select' || !layerEnabled(service)) {
                     buttonRemove();
                 } else {
-                    if (selection.select('.set-photo-from-viewer').empty()) {
-                        const button = buttonCreate();
-                        button.on('click', function (e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setPhotoId();
-                            buttonDisable('already_set');
-                        });
-                    }
+                    const button = buttonCreate();
+                    button.on('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setPhotoId();
+                        buttonDisable('already_set');
+                    });
                     buttonShowHide(service);
                 }
 
@@ -118,13 +116,15 @@ export function uiPhotoviewer(context) {
             }
 
             function getServiceId() {
-                const hash = utilStringQs(window.location.hash);
-                let serviceId;
-                if (hash.photo) {
-                    let result = hash.photo.split('/');
-                    serviceId = result[0];
+                for (const serviceId in services) {
+                    const service = services[serviceId];
+                    if (typeof service.isViewerOpen === 'function') {
+                        if (service.isViewerOpen()) {
+                            return serviceId;
+                        }
+                    }
                 }
-                return serviceId;
+                return false;
             }
 
             function buttonCreate() {
