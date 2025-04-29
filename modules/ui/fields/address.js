@@ -268,6 +268,7 @@ export function uiFieldAddress(field, context) {
             .enter()
             .append('input')
             .property('type', 'text')
+            .attr('id', d => d.id === 'housenumber' ? field.domId : null)
             .attr('class', function (d) { return 'addr-' + d.id; })
             .call(utilNoAuto)
             .each(addDropdown)
