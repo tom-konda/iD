@@ -107,6 +107,8 @@ export function uiPhotoviewer(context) {
                     const annotation = t('operations.change_tags.annotation');
                     context.perform(action, annotation);
                 }
+            } else {
+                buttonRemove();
             }
 
             function layerEnabled(which) {
@@ -143,7 +145,7 @@ export function uiPhotoviewer(context) {
                     .style('width', '300px');
 
                 if (service === 'panoramax') {
-                    const panoramaxControls = selection.select('.pnlm-zoom-controls.pnlm-controls');
+                    const panoramaxControls = selection.select('.panoramax-wrapper .pnlm-zoom-controls.pnlm-controls');
 
                     panoramaxControls
                         .style('margin-top', '36px');
@@ -157,7 +159,7 @@ export function uiPhotoviewer(context) {
                 button.remove();
 
                 if (service === 'panoramax') {
-                    const panoramaxControls = selection.select('.pnlm-zoom-controls.pnlm-controls');
+                    const panoramaxControls = selection.select('.panoramax-wrapper .pnlm-zoom-controls.pnlm-controls');
 
                     panoramaxControls
                         .style('margin-top', '6px');
