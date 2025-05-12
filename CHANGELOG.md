@@ -35,7 +35,8 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [@xxxx]: https://github.com/xxxx
 -->
 
-# unreleased (v2.34.0-dev)
+# v2.34.0
+##### 2025-05-12
 
 #### :sparkles: Usability & Accessibility
 * Show full relation label as hover-text in _membership editor_, disambiguate relations with duplicate labels by appending the relation id ([#10492])
@@ -58,8 +59,6 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix zoom level from resetting to the starting value when switching background imagery layer during the zoom transition
 * Fix invalid single-noded ways from being created by a _split_ operation under certain conditions when multiple nodes are selected ([#10997])
 * Properly highlight changed features when they are hovered in the upload dialog's list of changes ([#10030])
-#### :earth_asia: Localization
-#### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
 * Change background imagery of walkthrough tutorial to Bing (the previous source is not available anymore)
 #### :rocket: Presets
