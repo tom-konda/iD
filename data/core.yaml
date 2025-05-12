@@ -914,6 +914,9 @@ en:
     points:
       description: Points
       tooltip: "Points of Interest"
+    address_points:
+      description: Address Points
+      tooltip: "Addresses Mapped as Individual Points"
     traffic_roads:
       description: Traffic Roads
       tooltip: "Highways, Streets, etc."
