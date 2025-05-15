@@ -58,6 +58,8 @@ en:
     drag_node:
       connected_to_hidden: This can't be edited because it is connected to a hidden feature.
   operations:
+    _unavailable:
+      Cannot perform “{operation}” on currently selected features.
     add:
       annotation:
         point: Added a point.
