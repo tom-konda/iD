@@ -43,6 +43,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Show info message when a keyboard shortcut of an _operation_ is pressed, but the operation is not _available_ for the selected features ([#9896])
 #### :scissors: Operations
 #### :camera: Street-Level
+* Fix Mapilio photo markers from showing up on low zoom levels ([#11014], thanks [@keiffer213] and [@haipq07])
 #### :white_check_mark: Validation
 #### :bug: Bugfixes
 * Refresh numeric input fields after leaving focus with the value that is stored in the tag ([#11027])
@@ -55,7 +56,10 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#9896]: https://github.com/openstreetmap/iD/issues/9896
 [#10889]: https://github.com/openstreetmap/iD/pull/10889
 [#10970]: https://github.com/openstreetmap/iD/pull/10970
+[#11014]: https://github.com/openstreetmap/iD/pull/11014
 [#11027]: https://github.com/openstreetmap/iD/pull/11027
+[@keiffer213]: https://github.com/keiffer213
+[@haipq07]: https://github.com/haipq07
 
 
 # v2.34.0
