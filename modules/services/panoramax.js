@@ -15,6 +15,7 @@ import { services } from './';
 const apiUrl = 'https://api.panoramax.xyz/';
 const tileUrl = apiUrl + 'api/map/{z}/{x}/{y}.mvt';
 const imageDataUrl = apiUrl + 'api/collections/{collectionId}/items/{itemId}';
+const sequenceDataUrl = apiUrl + 'api/collections/{collectionId}/items?limit=1000';
 const userIdUrl = apiUrl + 'api/users/search?q={username}';
 const usernameURL = apiUrl + 'api/users/{userId}';
 const viewerUrl = apiUrl;
@@ -258,7 +259,7 @@ export default {
 
         _cache = {
             images: { rtree: new RBush(), forImageId: {} },
-            sequences: { rtree: new RBush(), lineString: {} },
+            sequences: { rtree: new RBush(), lineString: {}, items: {} },
             users: {},
             mockSequences: { rtree: new RBush(), lineString: {} },
             requests: { loaded: {}, inflight: {} }
@@ -585,21 +586,47 @@ export default {
 
     /**
      * Fetches the data for a specific image
-     * @param {*} collection_id
-     * @param {*} image_id
+     * @param {*} collectionId
+     * @param {*} imageId
      * @returns The fetched image data
      */
-    getImageData: async function(collection_id, image_id) {
-        const requestUrl = imageDataUrl.replace('{collectionId}', collection_id)
-            .replace('{itemId}', image_id);
+    getImageData: async function(collectionId, imageId) {
+        const cache = _cache.sequences.items;
+        if (cache[collectionId]) {
+            const cached = cache[collectionId]
+                .find(d => d.id === imageId);
+            if (cached) return cached;
+        } else {
+            // prime the cache with data from sequence
+            const response = await fetch(sequenceDataUrl
+                .replace('{collectionId}', collectionId),
+                { method: 'GET' });
 
-        const response = await fetch(requestUrl, { method: 'GET' });
-
-        if (!response.ok) {
-            throw new Error(response.status + ' ' + response.statusText);
+            if (!response.ok) {
+                throw new Error(response.status + ' ' + response.statusText);
+            }
+            const data = (await response.json()).features;
+            cache[collectionId] = data;
         }
-        const data = await response.json();
-        return data;
+
+        const result = cache[collectionId]
+            .find(d => d.id === imageId);
+        if (result) return result;
+
+        // not found in sequence: retry to load single item data
+        // ideally, we'd use the `withPicture` parameter, but it is buggy:
+        // https://gitlab.com/panoramax/server/api/-/issues/268
+        const itemResponse = await fetch(imageDataUrl
+            .replace('{collectionId}', collectionId)
+            .replace('{itemId}', imageId),
+            { method: 'GET' });
+
+        if (!itemResponse.ok) {
+            throw new Error(itemResponse.status + ' ' + itemResponse.statusText);
+        }
+        const itemData = await itemResponse.json();
+        cache[collectionId].push(itemData);
+        return itemData;
     },
 
     ensureViewerLoaded: function(context) {
