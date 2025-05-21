@@ -44,6 +44,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :scissors: Operations
 #### :camera: Street-Level
 * Fix Mapilio photo markers from showing up on low zoom levels ([#11014], thanks [@keiffer213] and [@haipq07])
+* Fix wrong 360° panorama from being displayed when navigating quickly between photos ([#11054])
 #### :white_check_mark: Validation
 #### :bug: Bugfixes
 * Refresh numeric input fields after leaving focus with the value that is stored in the tag ([#11027])
@@ -58,6 +59,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10970]: https://github.com/openstreetmap/iD/pull/10970
 [#11014]: https://github.com/openstreetmap/iD/pull/11014
 [#11027]: https://github.com/openstreetmap/iD/pull/11027
+[#11054]: https://github.com/openstreetmap/iD/issues/1104
 [@keiffer213]: https://github.com/keiffer213
 [@haipq07]: https://github.com/haipq07
 

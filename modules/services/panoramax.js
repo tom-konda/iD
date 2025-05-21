@@ -483,7 +483,7 @@ export default {
                 _isHD = !_isHD;
                 _definition = _isHD ? highDefinition : standardDefinition;
                 that.selectImage(context, d.id)
-                .showViewer(context);
+                    .showViewer(context);
             });
 
         label
@@ -518,7 +518,7 @@ export default {
             .attr('href', viewerLink)
             .text('panoramax.xyz');
 
-        this.getImageData(d.sequence_id, d.id).then(function(data){
+        this.getImageData(d.sequence_id, d.id).then(function(data) {
             _currentScene = {
                 currentImage: null,
                 nextImage: null,
@@ -589,11 +589,12 @@ export default {
      * @param {*} image_id
      * @returns The fetched image data
      */
-    getImageData: async function(collection_id, image_id){
+    getImageData: async function(collection_id, image_id) {
         const requestUrl = imageDataUrl.replace('{collectionId}', collection_id)
             .replace('{itemId}', image_id);
 
         const response = await fetch(requestUrl, { method: 'GET' });
+
         if (!response.ok) {
             throw new Error(response.status + ' ' + response.statusText);
         }
