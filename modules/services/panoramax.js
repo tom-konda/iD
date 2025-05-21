@@ -186,7 +186,7 @@ function loadTileDataToCache(data, tile, zoom) {
                 capture_time_parsed: new Date(feature.properties.ts),
                 id: feature.properties.id,
                 account_id: feature.properties.account_id,
-                sequence_id: feature.properties.sequences.split('\"')[1],
+                sequence_id: feature.properties.first_sequence,
                 heading: parseInt(feature.properties.heading, 10),
                 image_path: '',
                 isPano: feature.properties.type === 'equirectangular',
@@ -223,17 +223,22 @@ function loadTileDataToCache(data, tile, zoom) {
 
 /**
  * Fetches the username from Panoramax
- * @param {string} user_id
+ * @param {string} userId
  * @returns the username
  */
-async function getUsername(user_id){
-    const requestUrl = usernameURL.replace('{userId}', user_id);
+async function getUsername(userId) {
+    const cache = _cache.users;
+    if (cache[userId]) return cache[userId].name;
+
+    const requestUrl = usernameURL.replace('{userId}', userId);
 
     const response = await fetch(requestUrl, { method: 'GET' });
     if (!response.ok) {
         throw new Error(response.status + ' ' + response.statusText);
     }
     const data = await response.json();
+    cache[userId] = data;
+
     return data.name;
 }
 
@@ -254,6 +259,7 @@ export default {
         _cache = {
             images: { rtree: new RBush(), forImageId: {} },
             sequences: { rtree: new RBush(), lineString: {} },
+            users: {},
             mockSequences: { rtree: new RBush(), lineString: {} },
             requests: { loaded: {}, inflight: {} }
         };
