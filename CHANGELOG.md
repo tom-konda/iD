@@ -50,6 +50,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Refresh numeric input fields after leaving focus with the value that is stored in the tag ([#11027])
 * Fix oneway field falsely showing "Assumed to be Yes" if cycled through all options back to the default state
 * Fix false positives in "unreachable oneway" validation when `oneway=-1` tag is present ([#11068])
+* Fix a bug which can cause non-numeric values in tags of numeric input fields to not be displayed and potentially inadvertently cleared ([#11076])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
@@ -62,6 +63,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#11027]: https://github.com/openstreetmap/iD/pull/11027
 [#11054]: https://github.com/openstreetmap/iD/issues/1104
 [#11068]: https://github.com/openstreetmap/iD/issues/11068
+[#11076]: https://github.com/openstreetmap/iD/issues/11076
 [@keiffer213]: https://github.com/keiffer213
 [@haipq07]: https://github.com/haipq07
 
