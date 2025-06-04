@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: workflows
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version-file: '.nvmrc'
       # install and build development version of id-tagging-schema
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           repository: openstreetmap/id-tagging-schema
           path: './id-tagging-schema'
