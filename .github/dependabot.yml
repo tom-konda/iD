@@ -9,8 +9,6 @@ updates:
       interval: "daily"
     labels:
       - "chore-dependabot"
-    ignore:
-      - dependency-name: "sinon"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
