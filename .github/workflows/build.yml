@@ -36,6 +36,8 @@ jobs:
       run: npm clean-install
     - name: NPM - Audit packages signatures
       run: npm audit signatures
+    - name: NPM - Lint codebase
+      run: npm run lint
     - name: NPM - Build all
       run: npm run all
     - name: NPM - Run tests
