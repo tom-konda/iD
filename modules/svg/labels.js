@@ -792,11 +792,12 @@ const nonPrimaryKeys = new Set([
 ]);
 const nonPrimaryKeysRegex = /^(ref|survey|note):/;
 export function isAddressPoint(tags) {
-    const keys = Object.keys(tags);
+    const keys = Object.keys(tags).filter(key =>
+        osmIsInterestingTag(key) &&
+        !nonPrimaryKeys.has(key) &&
+        !nonPrimaryKeysRegex.test(key)
+    );
     return keys.length > 0 && keys.every(key =>
-        key.startsWith('addr:') ||
-        !osmIsInterestingTag(key) ||
-        nonPrimaryKeys.has(key) ||
-        nonPrimaryKeysRegex.test(key)
+        key.startsWith('addr:')
     );
 }

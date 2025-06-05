@@ -1,5 +1,6 @@
 import deepEqual from 'fast-deep-equal';
 import { clamp } from 'lodash-es';
+import { select as d3_select } from 'd3';
 
 import { geoScaleToZoom } from '../geo';
 import { osmEntity } from '../osm';
@@ -121,13 +122,16 @@ export function svgPoints(projection, context) {
             .append('path')
             .call(markerPath, 'shadow');
 
-        enter
+        enter.each(function(d) {
+            if (isAddressPoint(d.tags)) return;
+            d3_select(this)
             .append('ellipse')
             .attr('cx', 0.5)
             .attr('cy', 1)
             .attr('rx', 6.5)
             .attr('ry', 3)
             .attr('class', 'stroke');
+        });
 
         enter
             .append('path')
