@@ -99,8 +99,14 @@ export function utilDetect(refresh) {
 
 
   /* Host */
-  const loc = window.top.location;
+  let loc;
+  try {
+    loc = window.top.location;
+  } catch {
+    loc = window.location;
+  }
   let origin = loc.origin;
+
   if (!origin) {  // for unpatched IE11
     origin = loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port: '');
   }
