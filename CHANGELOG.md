@@ -51,6 +51,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix oneway field falsely showing "Assumed to be Yes" if cycled through all options back to the default state
 * Fix false positives in "unreachable oneway" validation when `oneway=-1` tag is present ([#11068])
 * Fix color of oneway arrows on roads that also have a railway tag ([#11080])
+* Allow squaring operation to be performed on all vertices of a closed way ([#11088])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
@@ -64,6 +65,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#11054]: https://github.com/openstreetmap/iD/issues/11054
 [#11068]: https://github.com/openstreetmap/iD/issues/11068
 [#11080]: https://github.com/openstreetmap/iD/issues/11080
+[#11088]: https://github.com/openstreetmap/iD/issues/11088
 [@keiffer213]: https://github.com/keiffer213
 [@haipq07]: https://github.com/haipq07
 
