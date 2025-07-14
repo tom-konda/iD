@@ -43,12 +43,14 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :white_check_mark: Validation
 #### :bug: Bugfixes
 * Fix flickering of imagery metadata information in background panel ([#9754])
+* Immediately update raw tag key/value inputs when spaces have been trimmed ([#11206])
 #### :earth_asia: Localization
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
 #### :hammer: Development
 
 [#9754]: https://github.com/openstreetmap/iD/issues/9754
+[#11206]: https://github.com/openstreetmap/iD/issues/11206
 
 
 # v2.35.1
