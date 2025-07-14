@@ -57,6 +57,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :hourglass: Performance
 #### :mortar_board: Walkthrough / Help
 #### :hammer: Development
+* Update `osm-auth` to version 3 to make logging in possible again for standalone deployments of iD
 
 [#9896]: https://github.com/openstreetmap/iD/issues/9896
 [#10889]: https://github.com/openstreetmap/iD/pull/10889
