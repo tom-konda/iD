@@ -35,17 +35,16 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [@xxxx]: https://github.com/xxxx
 -->
 
-# unreleased (v2.35.0-dev)
+# v2.35.0
+##### 2025-07-14
 
 #### :sparkles: Usability & Accessibility
 * Render housenumbers (or housenames) of address points or buildings as dedicated labels on the map ([#10970])
 * Simplify raw tag editor and make it easier to use with keyboard-only input ([#10889])
 * Show info message when a keyboard shortcut of an _operation_ is pressed, but the operation is not _available_ for the selected features ([#9896])
-#### :scissors: Operations
 #### :camera: Street-Level
 * Fix Mapilio photo markers from showing up on low zoom levels ([#11014], thanks [@keiffer213] and [@haipq07])
 * Fix wrong 360° panorama from being displayed when navigating quickly between photos ([#11054])
-#### :white_check_mark: Validation
 #### :bug: Bugfixes
 * Refresh numeric input fields after leaving focus with the value that is stored in the tag ([#11027])
 * Fix oneway field falsely showing "Assumed to be Yes" if cycled through all options back to the default state
@@ -53,9 +52,6 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix color of oneway arrows on roads that also have a railway tag ([#11080])
 * Allow squaring operation to be performed on all vertices of a closed way ([#11088])
 * Fix crash when radio field with cross-referenced strings/options is rendered ([#11187])
-#### :earth_asia: Localization
-#### :hourglass: Performance
-#### :mortar_board: Walkthrough / Help
 #### :hammer: Development
 * Update `osm-auth` to version 3 to make logging in possible again for standalone deployments of iD
 
