@@ -172,14 +172,7 @@ export function coreHistory(context) {
 
         replace: function() {
             d3_select(document).interrupt('history.perform');
-            return _replace(arguments, 1);
-        },
-
-
-        // Same as calling pop and then perform
-        overwrite: function() {
-            d3_select(document).interrupt('history.perform');
-            return _overwrite(arguments, 1);
+            return _replace(arguments);
         },
 
 
