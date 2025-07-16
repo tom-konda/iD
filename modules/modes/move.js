@@ -63,7 +63,7 @@ export function modeMove(context, entityIDs, baseGraph) {
             _prevMouse = context.map().mouse();
             fn = context.perform;
         } else {
-            fn = context.overwrite;
+            fn = context.replace;
         }
 
         const currMouse = context.map().mouse();
