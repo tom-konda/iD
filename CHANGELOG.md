@@ -48,10 +48,13 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Immediately update raw tag key/value inputs when spaces have been trimmed ([#11206])
 #### :earth_asia: Localization
 #### :hourglass: Performance
+#### :rocket: Presets
+* Support more complex logic to define preset fields that are conditionally hidden ([#9511], thanks [@k-yle])
 #### :mortar_board: Walkthrough / Help
 #### :hammer: Development
 
 [#9317]: https://github.com/openstreetmap/iD/issues/9317
+[#9511]: https://github.com/openstreetmap/iD/pull/9511
 [#9754]: https://github.com/openstreetmap/iD/issues/9754
 [#11206]: https://github.com/openstreetmap/iD/issues/11206
 
