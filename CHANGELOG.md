@@ -60,7 +60,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 
 
 # v2.35.2
-##### 2025-07-17
+##### 2025-07-18
 
 #### :bug: Bugfixes
 * Restore behavior of _reflect_ and _circularize_ operations, as well as fixing minor glitches in some other actions with transitions ([#11213])
