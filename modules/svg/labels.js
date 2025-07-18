@@ -795,6 +795,7 @@ export function textWidth(text, size, container) {
 
 
 const nonPrimaryKeys = new Set([
+    'building:flats',
     'check_date',
     'fixme',
     'layer',
@@ -802,7 +803,7 @@ const nonPrimaryKeys = new Set([
     'level:ref',
     'note'
 ]);
-const nonPrimaryKeysRegex = /^(ref|survey|note):/;
+const nonPrimaryKeysRegex = /^(ref|survey|note|([^:]+:|old_|alt_)addr):/;
 export function isAddressPoint(tags) {
     const keys = Object.keys(tags).filter(key =>
         osmIsInterestingTag(key) &&
