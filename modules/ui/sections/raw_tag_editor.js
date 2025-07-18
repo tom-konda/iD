@@ -234,7 +234,8 @@ export function uiSectionRawTagEditor(id, context) {
                     .call(reference.button)
                     .select('.tag-reference-button')
                     .attr('tabindex', -1)
-                    .classed('disabled', d => d.key === '');  // disabled for blank tag line
+                    .classed('disabled', d => d.key === '')
+                    .attr('disabled', d => d.key === '' ? 'disabled' : null);
 
                 row.call(reference.body);
 
@@ -243,6 +244,9 @@ export function uiSectionRawTagEditor(id, context) {
 
         items.selectAll('input.key')
             .attr('title', function(d) { return d.key; })
+            .attr('placeholder', function(d) {
+                return d.key === '' ? t('inspector.add_tag') : null;
+            })
             .attr('readonly', function(d) {
                 return isReadOnly(d) || null;
             })
@@ -273,7 +277,7 @@ export function uiSectionRawTagEditor(id, context) {
             });
 
         items.selectAll('button.remove')
-            .classed('disabled', d => d.key === '')  // disabled for blank tag line
+            .classed('disabled', d => d.key === '')
             .on(('PointerEvent' in window ? 'pointer' : 'mouse') + 'down', // 'click' fires too late - #5878
                 (d3_event, d) => {
                     if (d3_event.button !== 0) return;

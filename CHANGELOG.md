@@ -39,7 +39,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 
 #### :sparkles: Usability & Accessibility
 * The flip operation now works on nodes with no `direction` tag, to support quickly adding `direction` to features like traffic signs ([#9317], thanks [@k-yle])
-
+* Show "add new key" placeholder text for blank row in raw tag editor ([#11211], thanks [@bhavyaKhatri2703])
 #### :scissors: Operations
 #### :camera: Street-Level
 #### :white_check_mark: Validation
@@ -57,6 +57,8 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#9511]: https://github.com/openstreetmap/iD/pull/9511
 [#9754]: https://github.com/openstreetmap/iD/issues/9754
 [#11206]: https://github.com/openstreetmap/iD/issues/11206
+[#11211]: https://github.com/openstreetmap/iD/issues/11211
+[@bhavyaKhatri2703]: https://github.com/bhavyaKhatri2703
 
 
 # v2.35.2
