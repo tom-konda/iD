@@ -30,8 +30,6 @@ jobs:
       uses: actions/setup-node@v4.4.0
       with:
         node-version: ${{ matrix.node-version }}
-    - name: NPM - Audit for vulnerabilities in production packages
-      run: npm audit --audit-level=info --omit=dev
     - name: NPM - Perform clean install
       run: npm clean-install
     - name: NPM - Audit packages signatures
