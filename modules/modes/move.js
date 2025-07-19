@@ -205,5 +205,11 @@ export function modeMove(context, entityIDs, baseGraph) {
     };
 
 
+    mode.annotation = function(_annotation) {
+        annotation = _annotation;
+        return mode;
+    };
+
+
     return mode;
 }
