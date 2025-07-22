@@ -44,6 +44,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :scissors: Operations
 #### :camera: Street-Level
 #### :white_check_mark: Validation
+* Create a new warning tier for low-severity suggestions ([#11020], thanks [@k-yle])
 #### :bug: Bugfixes
 * Fix flickering of imagery metadata information in background panel ([#9754])
 * Immediately update raw tag key/value inputs when spaces have been trimmed ([#11206])
@@ -62,6 +63,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#9754]: https://github.com/openstreetmap/iD/issues/9754
 [#10639]: https://github.com/openstreetmap/iD/pull/10639
 [#10645]: https://github.com/openstreetmap/iD/pull/10645
+[#11020]: https://github.com/openstreetmap/iD/pull/11020
 [#11206]: https://github.com/openstreetmap/iD/issues/11206
 [#11211]: https://github.com/openstreetmap/iD/issues/11211
 [@bhavyaKhatri2703]: https://github.com/bhavyaKhatri2703
