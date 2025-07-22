@@ -2959,6 +2959,8 @@ img.tag-reference-wiki-image {
 }
 .add-tag input.key {
     border-bottom-left-radius: 4px;
+}
+.add-tag input.key::placeholder {
     font-weight: normal;
 }
 .add-tag input.value {
