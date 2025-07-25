@@ -41,6 +41,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * The flip operation now works on nodes with no `direction` tag, to support quickly adding `direction` to features like traffic signs ([#9317], thanks [@k-yle])
 * Show "add new key" placeholder text for blank row in raw tag editor ([#11211], thanks [@bhavyaKhatri2703])
 * Consider other name-like tags for labelling features, such as `lock_name` ([#9588], thanks [@k-yle])
+* Always take reduced map size due to open side panels into account when zooming to selected entities
 #### :scissors: Operations
 #### :camera: Street-Level
 * Fix bug where "tag photo id on selected map feature" is sometimes not working on the first opened photo ([#11021])
