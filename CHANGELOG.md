@@ -61,6 +61,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Support more complex logic to define preset fields that are conditionally hidden ([#9511], thanks [@k-yle])
 #### :mortar_board: Walkthrough / Help
 #### :hammer: Development
+* Add signatures audit to CI build pipeline and pin github action's versions ([#11103], thanks [@Harvester57])
 
 [#9317]: https://github.com/openstreetmap/iD/issues/9317
 [#9511]: https://github.com/openstreetmap/iD/pull/9511
@@ -77,6 +78,8 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#11247]: https://github.com/openstreetmap/iD/issues/11247
 [@bhavyaKhatri2703]: https://github.com/bhavyaKhatri2703
 [@harahu]: https://github.com/harahu
+[@Harvester57]: https://github.com/Harvester57
+
 
 # v2.35.3
 ##### 2025-07-19
