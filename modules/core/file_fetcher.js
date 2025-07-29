@@ -11,9 +11,7 @@ export { _mainFileFetcher as fileFetcher };
 // coreFileFetcher asynchronously fetches data from JSON files
 //
 export function coreFileFetcher() {
-  const ociVersion = packageJSON.dependencies['osm-community-index'] || packageJSON.devDependencies['osm-community-index'];
-  const v = parseVersion(ociVersion);
-  const ociVersionMinor = `${v.major}.${v.minor}`;
+  const ociVersion = packageJSON.devDependencies['osm-community-index'];
   const presetsVersion = packageJSON.devDependencies['@openstreetmap/id-tagging-schema'];
 
   let _this = {};
@@ -29,9 +27,9 @@ export function coreFileFetcher() {
     'qa_data': 'data/qa_data.min.json',
     'shortcuts': 'data/shortcuts.min.json',
     'territory_languages': 'data/territory_languages.min.json',
-    'oci_defaults': ociCdnUrl.replace('{version}', ociVersionMinor) + 'dist/defaults.min.json',
-    'oci_features': ociCdnUrl.replace('{version}', ociVersionMinor) + 'dist/featureCollection.min.json',
-    'oci_resources': ociCdnUrl.replace('{version}', ociVersionMinor) + 'dist/resources.min.json',
+    'oci_defaults': ociCdnUrl.replace('{version}', ociVersion) + 'dist/defaults.min.json',
+    'oci_features': ociCdnUrl.replace('{version}', ociVersion) + 'dist/featureCollection.min.json',
+    'oci_resources': ociCdnUrl.replace('{version}', ociVersion) + 'dist/resources.min.json',
     'presets_package': presetsCdnUrl.replace('{presets_version}', presetsVersion) + 'package.json',
     'deprecated': presetsCdnUrl + 'dist/deprecated.min.json',
     'discarded': presetsCdnUrl + 'dist/discarded.min.json',
