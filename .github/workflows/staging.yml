@@ -26,6 +26,7 @@ jobs:
       - run: npm clean-install
         working-directory: './id-tagging-schema'
       - run: npm audit signatures
+        working-directory: './id-tagging-schema'
       - run: npm run translations
         working-directory: './id-tagging-schema'
         env:
