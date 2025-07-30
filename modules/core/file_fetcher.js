@@ -1,4 +1,3 @@
-import parseVersion from 'vparse';
 import { presetsCdnUrl, ociCdnUrl, wmfSitematrixCdnUrl } from '../../config/id.js';
 
 import packageJSON from '../../package.json';
