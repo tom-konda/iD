@@ -52,6 +52,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 #### :white_check_mark: Validation
 * Create a new warning tier for low-severity suggestions ([#11020], thanks [@k-yle])
 * Zoom to correct location when clicking on the _relation member has no role_ issue ([#11247])
+* Hide _KeepRight_ quality assurance overlay, as the service is currently not providing up to date reports of OSM data ([#11098])
 #### :bug: Bugfixes
 * Fix flickering of imagery metadata information in background panel ([#9754])
 * Immediately update raw tag key/value inputs when spaces have been trimmed ([#11206])
@@ -75,6 +76,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#10645]: https://github.com/openstreetmap/iD/pull/10645
 [#11020]: https://github.com/openstreetmap/iD/pull/11020
 [#11021]: https://github.com/openstreetmap/iD/issues/11021
+[#11098]: https://github.com/openstreetmap/iD/issues/11098
 [#11133]: https://github.com/openstreetmap/iD/issues/11133
 [#11184]: https://github.com/openstreetmap/iD/pull/11184
 [#11206]: https://github.com/openstreetmap/iD/issues/11206
@@ -143,7 +145,6 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#11068]: https://github.com/openstreetmap/iD/issues/11068
 [#11080]: https://github.com/openstreetmap/iD/issues/11080
 [#11088]: https://github.com/openstreetmap/iD/issues/11088
-[#11098]: https://github.com/openstreetmap/iD/issues/11098
 [#11187]: https://github.com/openstreetmap/iD/issues/11187
 [@keiffer213]: https://github.com/keiffer213
 [@haipq07]: https://github.com/haipq07
