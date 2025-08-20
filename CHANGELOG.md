@@ -58,6 +58,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Immediately update raw tag key/value inputs when spaces have been trimmed ([#11206])
 * Fix duplicate values deleted when editing `destination:*` tags ([#10639], thanks [@k-yle])
 * Fix the relation role dropdown not opening on click ([#10645], thanks [@k-yle])
+* Allow uppercase character in tag `type=associatedStreet` ([#9639])
 #### :earth_asia: Localization
 * Add Korean phone number formats ([#11319], thanks [@aaei924])
 #### :hourglass: Performance
@@ -72,6 +73,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#9317]: https://github.com/openstreetmap/iD/issues/9317
 [#9511]: https://github.com/openstreetmap/iD/pull/9511
 [#9588]: https://github.com/openstreetmap/iD/pull/9588
+[#9639]: https://github.com/openstreetmap/iD/pull/9639
 [#9754]: https://github.com/openstreetmap/iD/issues/9754
 [#10639]: https://github.com/openstreetmap/iD/pull/10639
 [#10645]: https://github.com/openstreetmap/iD/pull/10645
