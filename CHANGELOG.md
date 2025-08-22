@@ -59,6 +59,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 * Fix duplicate values deleted when editing `destination:*` tags ([#10639], thanks [@k-yle])
 * Fix the relation role dropdown not opening on click ([#10645], thanks [@k-yle])
 * Allow uppercase character in tag `type=associatedStreet` ([#9639])
+* Fix lasso tool selecting nodes of hidden objects that have been recently hidden ([#11335])
 #### :earth_asia: Localization
 * Add Korean phone number formats ([#11319], thanks [@aaei924])
 #### :hourglass: Performance
@@ -88,6 +89,7 @@ _Breaking developer changes, which may affect downstream projects or sites that 
 [#11247]: https://github.com/openstreetmap/iD/issues/11247
 [#11319]: https://github.com/openstreetmap/iD/pull/11319
 [#11333]: https://github.com/openstreetmap/iD/pull/11333
+[#11335]: https://github.com/openstreetmap/iD/issues/11335
 [@bhavyaKhatri2703]: https://github.com/bhavyaKhatri2703
 [@harahu]: https://github.com/harahu
 [@Harvester57]: https://github.com/Harvester57
