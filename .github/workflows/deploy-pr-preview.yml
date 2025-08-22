@@ -21,6 +21,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '24'
+      - run: npm clean-install
 
       - name: Download all artifacts (dist folder and pr_metadata)
         uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5 # v11
@@ -37,7 +38,7 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{secrets.NETLIFY_AUTH_TOKEN}}
           NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE_ID}}
-        run: ./node_modules/.bin/netlify deploy --no-build --prod --dir=. --alias=pr-${{steps.pr_metadata.outputs.pr}}
+        run: ./node_modules/.bin/netlify deploy --no-build --dir=. --alias=pr-${{steps.pr_metadata.outputs.pr}}
 
       - name: Run afterDeploy script
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
