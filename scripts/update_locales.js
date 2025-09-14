@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* Downloads the latest translations from Transifex */
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import fs from 'node:fs';
 import YAML from 'js-yaml';
 import { transifexApi } from '@transifex/api';
@@ -300,7 +300,7 @@ function checkForDuplicateShortcuts(code, coreStrings) {
       let shortcut = modifier + rep;
       if (usedShortcuts[shortcut] && usedShortcuts[shortcut] !== shortcutPathString) {
         let message = code + ': duplicate shortcut "' + shortcut + '" for "' + usedShortcuts[shortcut] + '" and "' + shortcutPathString + '"';
-        console.warn(chalk.yellow(message));
+        console.warn(styleText('yellow', message));
       } else {
         usedShortcuts[shortcut] = shortcutPathString;
       }
