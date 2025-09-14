@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import { styleText } from 'node:util';
 import concat from 'concat-files';
-import { glob } from 'glob';
 import fs from 'node:fs';
 import postcss from 'postcss';
 import prepend from 'postcss-prefix-selector';
@@ -27,7 +26,7 @@ export function buildCSS() {
 
   return _currBuild =
     Promise.resolve()
-      .then(() => glob.globSync('css/**/*.css'))
+      .then(() => fs.globSync('css/**/*.css'))
       .then(files => doConcat(files.sort(), 'dist/iD.css'))
       .then(() => {
         const css = fs.readFileSync('dist/iD.css', 'utf8');
